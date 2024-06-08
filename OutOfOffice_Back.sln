@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OutOfOffice.Web", "OutOfOffice.Web\OutOfOffice.Web.csproj", "{6E49B299-4422-4129-B2BE-F861A2C6E848}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OutOfOffice.DAL", "OutOfOffice.DAL\OutOfOffice.DAL.csproj", "{C1C4FA81-C067-4117-8CBC-9A50DB72BB55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{6E49B299-4422-4129-B2BE-F861A2C6E848}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E49B299-4422-4129-B2BE-F861A2C6E848}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E49B299-4422-4129-B2BE-F861A2C6E848}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1C4FA81-C067-4117-8CBC-9A50DB72BB55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1C4FA81-C067-4117-8CBC-9A50DB72BB55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1C4FA81-C067-4117-8CBC-9A50DB72BB55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1C4FA81-C067-4117-8CBC-9A50DB72BB55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
