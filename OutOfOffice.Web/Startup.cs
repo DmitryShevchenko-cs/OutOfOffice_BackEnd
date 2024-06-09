@@ -5,6 +5,7 @@ using OutOfOffice.BLL.Services.Interfaces;
 using OutOfOffice.DAL;
 using OutOfOffice.DAL.Repository;
 using OutOfOffice.DAL.Repository.Interfaces;
+using OutOfOffice.Web.Helpers;
 
 
 namespace OutOfOffice.Web;
@@ -20,6 +21,9 @@ public class Startup
  
     public void ConfigureServices(IServiceCollection services)
     { 
+        services.AddJwtAuth();
+        services.AddScoped<TokenHelper>();
+        
         //JSON serialization and add a converter for enums
         services.AddControllers().AddNewtonsoftJson(opt => 
             opt.SerializerSettings.Converters.Add(new StringEnumConverter()));
@@ -36,15 +40,15 @@ public class Startup
         services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         services.AddScoped<IApprovalRequestRepository, ApprovalRequestRepository>();
         services.AddScoped<ILeaveRequestRepository, LeaveRequestRepository>();
-        services.AddScoped<IManagerRepository, ManagerRepository>();
         services.AddScoped<IProjectRepository, ProjectRepository>();
         
         // DI Services
-        services.AddScoped<IEmployeeService, EmployeeService>();
+        services.AddScoped<IGeneralEmployeeService, GeneralGeneralEmployeeService>();
         services.AddScoped<IApprovalRequestService, ApprovalRequestService>();
         services.AddScoped<ILeaveRequestService, LeaveRequestService>();
         services.AddScoped<IManagerService, ManagerService>();
         services.AddScoped<IProjectService, ProjectService>();
+        services.AddScoped<IAuthEmployeeService, AuthEmployeeService>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

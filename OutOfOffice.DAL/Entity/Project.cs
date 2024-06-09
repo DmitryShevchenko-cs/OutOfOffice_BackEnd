@@ -14,6 +14,6 @@ public class Project : BaseEntity
     public string Comment { get; set; } = null!;
     public bool Status { get; set; }
     
-    public IEnumerable<Employee> Employees { get; set; } = null!;
+    public IEnumerable<GeneralEmployee> Employees { get; set; } = null!;
     
 }

@@ -8,7 +8,7 @@ public class LeaveRequestConfiguration : IEntityTypeConfiguration<LeaveRequest>
 {
     public void Configure(EntityTypeBuilder<LeaveRequest> builder)
     {
-        builder.HasOne(i => i.Employee)
+        builder.HasOne(i => i.GeneralEmployee)
             .WithMany(i => i.LeaveRequests)
             .OnDelete(DeleteBehavior.Restrict);
         

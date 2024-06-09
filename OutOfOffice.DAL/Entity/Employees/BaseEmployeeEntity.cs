@@ -9,6 +9,6 @@ public class BaseEmployeeEntity : BaseEntity
     public byte[]? Photo { get; set; }
 
     public int AuthorizationInfoId { get; set; }
-    public AuthorizationInfo? AuthorizationInfo { get; set; } = null!;
+    public AuthorizationInfo? AuthorizationInfo { get; set; }
     
 }

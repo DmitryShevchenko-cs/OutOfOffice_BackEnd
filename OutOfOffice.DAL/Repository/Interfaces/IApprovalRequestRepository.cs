@@ -4,7 +4,7 @@ namespace OutOfOffice.DAL.Repository.Interfaces;
 
 public interface IApprovalRequestRepository : IBasicRepository<ApprovalRequest>
 {
-    public Task ApproveRequestAsync(ApprovalRequest request, CancellationToken cancellationToken = default);
-    public Task DeleteApprovalAsync(ApprovalRequest request, CancellationToken cancellationToken = default);
-    public Task UpdateApprovalAsync(ApprovalRequest request, CancellationToken cancellationToken = default);
+    Task ApproveRequestAsync(ApprovalRequest request, CancellationToken cancellationToken = default);
+    Task DeleteApprovalAsync(ApprovalRequest request, CancellationToken cancellationToken = default);
+    Task UpdateApprovalAsync(ApprovalRequest request, CancellationToken cancellationToken = default);
 }
