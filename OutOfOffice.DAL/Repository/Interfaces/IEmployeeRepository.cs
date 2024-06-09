@@ -2,9 +2,9 @@ using OutOfOffice.DAL.Entity.Employees;
 
 namespace OutOfOffice.DAL.Repository.Interfaces;
 
-public interface IEmployeeRepository : IBasicRepository<Employee>
+public interface IEmployeeRepository : IBasicRepository<BaseEmployeeEntity>
 {
-    public Task AddEmployeeAsync(Employee employee, CancellationToken cancellationToken = default);
-    public Task DeleteEmployeeAsync(Employee employee, CancellationToken cancellationToken = default);
-    public Task UpdateEmployeeAsync(Employee employee, CancellationToken cancellationToken = default);
+    Task AddEmployeeAsync(BaseEmployeeEntity employee, CancellationToken cancellationToken = default);
+    Task DeleteEmployeeAsync(BaseEmployeeEntity employee, CancellationToken cancellationToken = default);
+    Task UpdateEmployeeAsync(BaseEmployeeEntity employee, CancellationToken cancellationToken = default);
 }
