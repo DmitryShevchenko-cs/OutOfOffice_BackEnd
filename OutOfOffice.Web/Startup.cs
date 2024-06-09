@@ -18,16 +18,23 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     { 
+        //JSON serialization and add a converter for enums
         services.AddControllers().AddNewtonsoftJson(opt => 
             opt.SerializerSettings.Converters.Add(new StringEnumConverter()));
         
+        //dbConnection
         var connectionString = Environment.GetEnvironmentVariable("SQLSERVER_CONNECTION_STRING") ?? Configuration.GetConnectionString("ConnectionString");
-
+        services.AddDbContext<OfficeDbContext>(options =>
+            options.UseSqlServer(connectionString));
+        
+        //automapper
+        services.AddAutoMapper(typeof(Startup));
+        
+        // DI
         services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         services.AddScoped<IManagerRepository, ManagerRepository>();
         
-        services.AddDbContext<OfficeDbContext>(options =>
-            options.UseSqlServer(connectionString));
+        
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

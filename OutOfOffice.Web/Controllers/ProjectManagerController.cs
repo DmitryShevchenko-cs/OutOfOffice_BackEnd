@@ -1,7 +1,9 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OutOfOffice.DAL.Entity.Employees;
 using OutOfOffice.DAL.Repository.Interfaces;
+using OutOfOffice.Web.Models;
 
 namespace OutOfOffice.Web.Controllers;
 
@@ -11,19 +13,21 @@ namespace OutOfOffice.Web.Controllers;
 public class ProjectManagerController : ControllerBase
 {
     private readonly IManagerRepository _managerRepository;
+    private readonly IMapper _mapper;
 
-    public ProjectManagerController(IManagerRepository managerRepository)
+    public ProjectManagerController(IManagerRepository managerRepository, IMapper mapper)
     {
         _managerRepository = managerRepository;
+        _mapper = mapper;
     }
     
     [AllowAnonymous]
     [HttpPost]
-    public async Task<IActionResult> CreateManager([FromBody] ProjectManager manager, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateManager([FromBody] ProjectManagerCreateModel manager, CancellationToken cancellationToken)
     {
-        await _managerRepository.AddManagerAsync(manager, cancellationToken);
+        await _managerRepository.AddManagerAsync(_mapper.Map<ProjectManager>(manager), cancellationToken);
 
-        return Ok();
+        return Ok(manager);
     }
     
 }
