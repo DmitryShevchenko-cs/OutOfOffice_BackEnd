@@ -24,6 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\OutOfOffice.BLL\OutOfOffice.BLL.csproj" />
       <ProjectReference Include="..\OutOfOffice.DAL\OutOfOffice.DAL.csproj" />
     </ItemGroup>
 

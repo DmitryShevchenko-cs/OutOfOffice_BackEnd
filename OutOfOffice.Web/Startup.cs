@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Converters;
+using OutOfOffice.BLL.Services;
+using OutOfOffice.BLL.Services.Interfaces;
 using OutOfOffice.DAL;
 using OutOfOffice.DAL.Repository;
 using OutOfOffice.DAL.Repository.Interfaces;
@@ -15,7 +17,7 @@ public class Startup
     }
 
     public IConfiguration Configuration { get; }
-
+ 
     public void ConfigureServices(IServiceCollection services)
     { 
         //JSON serialization and add a converter for enums
@@ -30,11 +32,19 @@ public class Startup
         //automapper
         services.AddAutoMapper(typeof(Startup));
         
-        // DI
+        // DI Repositories
         services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+        services.AddScoped<IApprovalRequestRepository, ApprovalRequestRepository>();
+        services.AddScoped<ILeaveRequestRepository, LeaveRequestRepository>();
         services.AddScoped<IManagerRepository, ManagerRepository>();
+        services.AddScoped<IProjectRepository, ProjectRepository>();
         
-        
+        // DI Services
+        services.AddScoped<IEmployeeService, EmployeeService>();
+        services.AddScoped<IApprovalRequestService, ApprovalRequestService>();
+        services.AddScoped<ILeaveRequestService, LeaveRequestService>();
+        services.AddScoped<IManagerService, ManagerService>();
+        services.AddScoped<IProjectService, ProjectService>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
