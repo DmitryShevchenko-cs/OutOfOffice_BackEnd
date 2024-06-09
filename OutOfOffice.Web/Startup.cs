@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Converters;
 using OutOfOffice.DAL;
+using OutOfOffice.DAL.Repository;
+using OutOfOffice.DAL.Repository.Interfaces;
 
 
 namespace OutOfOffice.Web;
@@ -20,12 +22,12 @@ public class Startup
             opt.SerializerSettings.Converters.Add(new StringEnumConverter()));
         
         var connectionString = Environment.GetEnvironmentVariable("SQLSERVER_CONNECTION_STRING") ?? Configuration.GetConnectionString("ConnectionString");
-        
-                
+
+        services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+        services.AddScoped<IManagerRepository, ManagerRepository>();
         
         services.AddDbContext<OfficeDbContext>(options =>
             options.UseSqlServer(connectionString));
-        
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -45,5 +47,11 @@ public class Startup
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseStaticFiles();
+        
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+        });
+        
     }
 }
