@@ -16,5 +16,9 @@ public class LeaveRequestConfiguration : IEntityTypeConfiguration<LeaveRequest>
             .WithMany(i => i.LeaveRequests)
             .OnDelete(DeleteBehavior.Restrict);
         
+        builder.HasOne(i => i.ApprovalRequest)
+            .WithOne(i => i.LeaveRequest)
+            .HasForeignKey<ApprovalRequest>(a => a.LeaveRequestId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

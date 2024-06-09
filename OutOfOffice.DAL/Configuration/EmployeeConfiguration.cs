@@ -28,5 +28,9 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         
         builder.Property(e => e.OutOfOfficeBalance)
             .HasColumnType("decimal(18,2)");
+        
+        builder.HasOne(i => i.AuthorizationInfo)
+            .WithOne(i => (Employee)i.Employee)
+            .HasForeignKey<AuthorizationInfo>(i => i.EmployeeId);
     }
 }

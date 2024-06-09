@@ -12,7 +12,7 @@ using OutOfOffice.DAL;
 namespace OutOfOffice.DAL.Migrations
 {
     [DbContext(typeof(OfficeDbContext))]
-    [Migration("20240608232907_AuthorizationInfo_Migration")]
+    [Migration("20240609002737_AuthorizationInfo_Migration")]
     partial class AuthorizationInfo_Migration
     {
         /// <inheritdoc />
@@ -79,6 +79,9 @@ namespace OutOfOffice.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("ExpiredDate")
                         .HasColumnType("datetime2");
 
@@ -88,10 +91,13 @@ namespace OutOfOffice.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AuthorizationInfo");
+                    b.HasIndex("EmployeeId")
+                        .IsUnique();
+
+                    b.ToTable("AuthorizationInfos");
                 });
 
-            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.BaseManagerEntity", b =>
+            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.BaseEmployeeEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -110,66 +116,24 @@ namespace OutOfOffice.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("Photo")
-                        .HasColumnType("varbinary(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorizationInfoId");
-
-                    b.ToTable("Managers");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("BaseManagerEntity");
-
-                    b.UseTphMappingStrategy();
-                });
-
-            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.Employee", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AuthorizationInfoId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FullName")
+                    b.Property<string>("Login")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("HrMangerId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("OutOfOfficeBalance")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("Photo")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<int>("PositionId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("SubdivisionId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorizationInfoId");
+                    b.ToTable("BaseEmployees");
 
-                    b.HasIndex("HrMangerId");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("BaseEmployeeEntity");
 
-                    b.HasIndex("Id");
-
-                    b.HasIndex("PositionId");
-
-                    b.HasIndex("SubdivisionId");
-
-                    b.ToTable("Employees");
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.LeaveRequest", b =>
@@ -312,6 +276,43 @@ namespace OutOfOffice.DAL.Migrations
                     b.ToTable("Subdivisions");
                 });
 
+            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.BaseManagerEntity", b =>
+                {
+                    b.HasBaseType("OutOfOffice.DAL.Entity.Employees.BaseEmployeeEntity");
+
+                    b.HasDiscriminator().HasValue("BaseManagerEntity");
+                });
+
+            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.Employee", b =>
+                {
+                    b.HasBaseType("OutOfOffice.DAL.Entity.Employees.BaseEmployeeEntity");
+
+                    b.Property<int>("HrMangerId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("OutOfOfficeBalance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("PositionId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("SubdivisionId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("HrMangerId");
+
+                    b.HasIndex("Id");
+
+                    b.HasIndex("PositionId");
+
+                    b.HasIndex("SubdivisionId");
+
+                    b.HasDiscriminator().HasValue("Employee");
+                });
+
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.HrManager", b =>
                 {
                     b.HasBaseType("OutOfOffice.DAL.Entity.Employees.BaseManagerEntity");
@@ -360,50 +361,15 @@ namespace OutOfOffice.DAL.Migrations
                     b.Navigation("LeaveRequest");
                 });
 
-            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.BaseManagerEntity", b =>
+            modelBuilder.Entity("OutOfOffice.DAL.Entity.AuthorizationInfo", b =>
                 {
-                    b.HasOne("OutOfOffice.DAL.Entity.AuthorizationInfo", "AuthorizationInfo")
-                        .WithMany()
-                        .HasForeignKey("AuthorizationInfoId")
+                    b.HasOne("OutOfOffice.DAL.Entity.Employees.BaseEmployeeEntity", "Employee")
+                        .WithOne("AuthorizationInfo")
+                        .HasForeignKey("OutOfOffice.DAL.Entity.AuthorizationInfo", "EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AuthorizationInfo");
-                });
-
-            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.Employee", b =>
-                {
-                    b.HasOne("OutOfOffice.DAL.Entity.AuthorizationInfo", "AuthorizationInfo")
-                        .WithMany()
-                        .HasForeignKey("AuthorizationInfoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OutOfOffice.DAL.Entity.Employees.HrManager", "HrManager")
-                        .WithMany("Partners")
-                        .HasForeignKey("HrMangerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("OutOfOffice.DAL.Entity.Selections.Position", "Position")
-                        .WithMany("Employees")
-                        .HasForeignKey("PositionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OutOfOffice.DAL.Entity.Selections.Subdivision", "Subdivision")
-                        .WithMany("Employees")
-                        .HasForeignKey("SubdivisionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AuthorizationInfo");
-
-                    b.Navigation("HrManager");
-
-                    b.Navigation("Position");
-
-                    b.Navigation("Subdivision");
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.LeaveRequest", b =>
@@ -444,14 +410,36 @@ namespace OutOfOffice.DAL.Migrations
                     b.Navigation("ProjectType");
                 });
 
-            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.BaseManagerEntity", b =>
-                {
-                    b.Navigation("ApprovalRequest");
-                });
-
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.Employee", b =>
                 {
-                    b.Navigation("LeaveRequests");
+                    b.HasOne("OutOfOffice.DAL.Entity.Employees.HrManager", "HrManager")
+                        .WithMany("Partners")
+                        .HasForeignKey("HrMangerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("OutOfOffice.DAL.Entity.Selections.Position", "Position")
+                        .WithMany("Employees")
+                        .HasForeignKey("PositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OutOfOffice.DAL.Entity.Selections.Subdivision", "Subdivision")
+                        .WithMany("Employees")
+                        .HasForeignKey("SubdivisionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("HrManager");
+
+                    b.Navigation("Position");
+
+                    b.Navigation("Subdivision");
+                });
+
+            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.BaseEmployeeEntity", b =>
+                {
+                    b.Navigation("AuthorizationInfo");
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.LeaveRequest", b =>
@@ -477,6 +465,16 @@ namespace OutOfOffice.DAL.Migrations
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Selections.Subdivision", b =>
                 {
                     b.Navigation("Employees");
+                });
+
+            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.BaseManagerEntity", b =>
+                {
+                    b.Navigation("ApprovalRequest");
+                });
+
+            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.Employee", b =>
+                {
+                    b.Navigation("LeaveRequests");
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.HrManager", b =>
