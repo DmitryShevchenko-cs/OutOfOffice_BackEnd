@@ -13,13 +13,10 @@ public class LeaveRequest : BaseEntity
     public AbsenceReason AbsenceReason { get; set; }= null!;
     
     public int ApprovalRequestId { get; set; }
-    public ApprovalRequest ApprovalRequest { get; set; }= null!;
+    public ApprovalRequest? ApprovalRequest { get; set; }
     
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
-    public Status Status { get; set; }
+    
     public string Comment { get; set; } = null!;
-
-    
-    
 }

@@ -22,10 +22,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\OutOfOffice.DAL\OutOfOffice.DAL.csproj" />
     </ItemGroup>
 
