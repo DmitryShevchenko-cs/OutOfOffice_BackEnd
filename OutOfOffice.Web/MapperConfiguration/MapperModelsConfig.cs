@@ -76,12 +76,20 @@ public class MapperModelsConfig : AutoMapper.Profile
             .ReverseMap();
         CreateMap<SelectionViewModel, Subdivision>()
             .ReverseMap();
+        CreateMap<SelectionViewModel, ProjectType>()
+            .ReverseMap();
         
         CreateMap<EmployeeViewModel, EmployeeModel>()
             .ReverseMap();
         
         CreateMap<EmployeeCreateModel, EmployeeModel>()
             .ReverseMap();
+        
+        CreateMap<ProjectViewModel, ProjectModel>()
+            .ReverseMap();
+        CreateMap<ProjectCreateModel, ProjectModel>()
+            .ReverseMap();
+        
 
     }
 }

@@ -18,6 +18,6 @@ public class EmployeeViewModel
     
     public ManagerViewModel HrManager { get; set; } = null!;
     
-    // public ICollection<LeaveRequestModel> LeaveRequests { get; set; } = null!;
-    // public ICollection<ProjectModel> Projects { get; set; } = null!;
+    public ICollection<LeaveRequestViewModel> LeaveRequests { get; set; } = null!;
+    public ICollection<ProjectViewModel> Projects { get; set; } = null!;
 }

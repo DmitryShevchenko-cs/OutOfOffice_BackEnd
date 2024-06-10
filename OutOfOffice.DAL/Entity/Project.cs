@@ -8,6 +8,7 @@ public class Project : BaseEntity
     public int ProjectManagerId { get; set; }
     public ProjectManager? ProjectManager { get; set; } = null!;
     
+    public int ProjectTypeId { get; set; }
     public ProjectType ProjectType { get; set; } = null!;
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }

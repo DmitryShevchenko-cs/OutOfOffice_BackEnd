@@ -24,6 +24,8 @@ public class EmployeeRepository : IEmployeeRepository
         return await _officeDbContext.BaseEmployees
             .Include(r => ((Employee)r).Subdivision)
             .Include(r => ((Employee)r).Position)
+            .Include(r => ((Employee)r).Projects)
+            .Include(r => ((Employee)r).LeaveRequests)
             .SingleOrDefaultAsync(r => r.Id == id, cancellationToken);
     }
 
