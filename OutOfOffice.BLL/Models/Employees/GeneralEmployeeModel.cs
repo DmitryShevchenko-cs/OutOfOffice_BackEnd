@@ -11,7 +11,7 @@ public class GeneralEmployeeModel : BaseEmployeeModel
     public Position Position { get; set; }= null!;
     
     public bool Status { get; set; }
-    public decimal OutOfOfficeBalance { get; set; }
+    public int OutOfOfficeBalance { get; set; }
 
     public int? HrMangerId { get; set; }
     public HrManagerModel HrManager { get; set; } = null!;
