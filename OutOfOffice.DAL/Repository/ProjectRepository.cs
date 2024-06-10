@@ -20,7 +20,9 @@ public class ProjectRepository : IProjectRepository
 
     public async Task<Project?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        return await _officeDbContext.Projects.SingleOrDefaultAsync(r => r.Id == id, cancellationToken);
+        return await _officeDbContext.Projects
+            .Include(i => i.Employees)
+            .SingleOrDefaultAsync(r => r.Id == id, cancellationToken);
     }
 
     public async Task CreateProjectAsync(Project project, CancellationToken cancellationToken = default)

@@ -29,7 +29,7 @@ namespace OutOfOffice.DAL.Migrations
                 defaultValue: 0);
 
             migrationBuilder.CreateTable(
-                name: "EmployeeProject",
+                name: "GeneralEmployeeProject",
                 columns: table => new
                 {
                     EmployeesId = table.Column<int>(type: "int", nullable: false),
@@ -37,15 +37,15 @@ namespace OutOfOffice.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EmployeeProject", x => new { x.EmployeesId, x.ProjectsId });
+                    table.PrimaryKey("PK_GeneralEmployeeProject", x => new { x.EmployeesId, x.ProjectsId });
                     table.ForeignKey(
-                        name: "FK_EmployeeProject_Employees_EmployeesId",
+                        name: "FK_GeneralEmployeeProject_Employees_EmployeesId",
                         column: x => x.EmployeesId,
                         principalTable: "Employees",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_EmployeeProject_Projects_ProjectsId",
+                        name: "FK_GeneralEmployeeProject_Projects_ProjectsId",
                         column: x => x.ProjectsId,
                         principalTable: "Projects",
                         principalColumn: "Id",
@@ -58,8 +58,8 @@ namespace OutOfOffice.DAL.Migrations
                 column: "GeneralEmployeeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EmployeeProject_ProjectsId",
-                table: "EmployeeProject",
+                name: "IX_GeneralEmployeeProject_ProjectsId",
+                table: "GeneralEmployeeProject",
                 column: "ProjectsId");
 
             migrationBuilder.AddForeignKey(
@@ -79,7 +79,7 @@ namespace OutOfOffice.DAL.Migrations
                 table: "LeaveRequests");
 
             migrationBuilder.DropTable(
-                name: "EmployeeProject");
+                name: "GeneralEmployeeProject");
 
             migrationBuilder.DropIndex(
                 name: "IX_LeaveRequests_GeneralEmployeeId",

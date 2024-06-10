@@ -1,6 +1,6 @@
 namespace OutOfOffice.BLL.Models.Employees;
 
-public class ProjectMangerModel : BaseManagerModel
+public class AdminModel : BaseEmployeeModel
 {
     
 }

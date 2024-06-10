@@ -30,7 +30,7 @@ public class OfficeDbContext : DbContext
     
     public DbSet<AuthorizationInfo> AuthorizationInfos { get; set; }
     
-    public DbSet<AdminEntity> Admins { get; set; }
+    public DbSet<Admin> Admins { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

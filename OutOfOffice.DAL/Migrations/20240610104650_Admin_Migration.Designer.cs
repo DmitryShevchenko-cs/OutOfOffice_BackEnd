@@ -12,7 +12,7 @@ using OutOfOffice.DAL;
 namespace OutOfOffice.DAL.Migrations
 {
     [DbContext(typeof(OfficeDbContext))]
-    [Migration("20240610000058_Admin_Migration")]
+    [Migration("20240610104650_Admin_Migration")]
     partial class Admin_Migration
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace OutOfOffice.DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("EmployeeProject", b =>
+            modelBuilder.Entity("GeneralEmployeeProject", b =>
                 {
                     b.Property<int>("EmployeesId")
                         .HasColumnType("int");
@@ -37,7 +37,7 @@ namespace OutOfOffice.DAL.Migrations
 
                     b.HasIndex("ProjectsId");
 
-                    b.ToTable("EmployeeProject");
+                    b.ToTable("GeneralEmployeeProject");
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.ApprovalRequest", b =>
@@ -279,7 +279,7 @@ namespace OutOfOffice.DAL.Migrations
                     b.ToTable("Subdivisions");
                 });
 
-            modelBuilder.Entity("OutOfOffice.DAL.Entity.AdminEntity", b =>
+            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.AdminEntity", b =>
                 {
                     b.HasBaseType("OutOfOffice.DAL.Entity.Employees.BaseEmployeeEntity");
 
@@ -339,7 +339,7 @@ namespace OutOfOffice.DAL.Migrations
                     b.HasDiscriminator().HasValue("ProjectManager");
                 });
 
-            modelBuilder.Entity("EmployeeProject", b =>
+            modelBuilder.Entity("GeneralEmployeeProject", b =>
                 {
                     b.HasOne("OutOfOffice.DAL.Entity.Employees.GeneralEmployee", null)
                         .WithMany()

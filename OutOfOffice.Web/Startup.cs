@@ -43,12 +43,13 @@ public class Startup
         services.AddScoped<IProjectRepository, ProjectRepository>();
         
         // DI Services
-        services.AddScoped<IGeneralEmployeeService, GeneralGeneralEmployeeService>();
+        services.AddScoped<IGeneralEmployeeService, GeneralEmployeeService>();
         services.AddScoped<IApprovalRequestService, ApprovalRequestService>();
         services.AddScoped<ILeaveRequestService, LeaveRequestService>();
         services.AddScoped<IManagerService, ManagerService>();
         services.AddScoped<IProjectService, ProjectService>();
         services.AddScoped<IAuthEmployeeService, AuthEmployeeService>();
+        services.AddScoped<IAdminService, AdminService>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

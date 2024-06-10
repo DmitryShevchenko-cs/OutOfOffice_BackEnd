@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OutOfOffice.DAL;
 
@@ -11,9 +12,11 @@ using OutOfOffice.DAL;
 namespace OutOfOffice.DAL.Migrations
 {
     [DbContext(typeof(OfficeDbContext))]
-    partial class OfficeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240610114651_IsDeactivated_field_Migration")]
+    partial class IsDeactivated_field_Migration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace OutOfOffice.DAL.Migrations
 
                     b.HasIndex("ProjectsId");
 
-                    b.ToTable("GeneralEmployeeProject", (string)null);
+                    b.ToTable("GeneralEmployeeProject");
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.ApprovalRequest", b =>
@@ -65,7 +68,7 @@ namespace OutOfOffice.DAL.Migrations
                     b.HasIndex("LeaveRequestId")
                         .IsUnique();
 
-                    b.ToTable("ApprovalRequests", (string)null);
+                    b.ToTable("ApprovalRequests");
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.AuthorizationInfo", b =>
@@ -91,7 +94,7 @@ namespace OutOfOffice.DAL.Migrations
                     b.HasIndex("EmployeeId")
                         .IsUnique();
 
-                    b.ToTable("AuthorizationInfos", (string)null);
+                    b.ToTable("AuthorizationInfos");
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.BaseEmployeeEntity", b =>
@@ -129,7 +132,7 @@ namespace OutOfOffice.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Employees", (string)null);
+                    b.ToTable("Employees");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("BaseEmployeeEntity");
 
@@ -172,7 +175,7 @@ namespace OutOfOffice.DAL.Migrations
 
                     b.HasIndex("GeneralEmployeeId");
 
-                    b.ToTable("LeaveRequests", (string)null);
+                    b.ToTable("LeaveRequests");
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Project", b =>
@@ -211,7 +214,7 @@ namespace OutOfOffice.DAL.Migrations
 
                     b.HasIndex("ProjectTypeId");
 
-                    b.ToTable("Projects", (string)null);
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Selections.AbsenceReason", b =>
@@ -228,7 +231,7 @@ namespace OutOfOffice.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AbsenceReasons", (string)null);
+                    b.ToTable("AbsenceReasons");
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Selections.Position", b =>
@@ -245,7 +248,7 @@ namespace OutOfOffice.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Positions", (string)null);
+                    b.ToTable("Positions");
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Selections.ProjectType", b =>
@@ -262,7 +265,7 @@ namespace OutOfOffice.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProjectTypes", (string)null);
+                    b.ToTable("ProjectTypes");
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Selections.Subdivision", b =>
@@ -279,7 +282,7 @@ namespace OutOfOffice.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Subdivisions", (string)null);
+                    b.ToTable("Subdivisions");
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.AdminEntity", b =>

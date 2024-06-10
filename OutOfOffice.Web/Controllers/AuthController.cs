@@ -39,6 +39,16 @@ public class AuthController : ControllerBase
         return Ok(new { accessKey = token, refresh_token = refreshToken, expiredDate = expiredDate });
     }
     
+    [AllowAnonymous]
+    [HttpPost("token/{refreshToken}")]
+    public async Task<IActionResult> UpdateTokenAsync([FromQuery] string refreshToken, CancellationToken cancellationToken)
+    {
+        refreshToken = refreshToken.Replace(" ", "+"); 
+        var user = await _authEmployeeService.GetUserByRefreshTokenAsync(refreshToken, cancellationToken);
+        var token = _tokenHelper.GetToken(user.Id);
+        return Ok(new { accessKey = token, refresh_token = refreshToken, expiredDate = user.AuthorizationInfo!.ExpiredDate });
+    }
+    
     [HttpPost]
     [Route(("logout"))]
     public async Task<IActionResult> LogOutAsync(CancellationToken cancellationToken)

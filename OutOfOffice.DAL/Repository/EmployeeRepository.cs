@@ -22,14 +22,14 @@ public class EmployeeRepository : IEmployeeRepository
     public async Task<BaseEmployeeEntity?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         return await _officeDbContext.Employees
-            .Include(r => r.AuthorizationInfo)
             .SingleOrDefaultAsync(r => r.Id == id, cancellationToken);
     }
 
-    public async Task AddEmployeeAsync(BaseEmployeeEntity employee, CancellationToken cancellationToken = default)
+    public async Task<BaseEmployeeEntity> AddEmployeeAsync(BaseEmployeeEntity employee, CancellationToken cancellationToken = default)
     {
-        await _officeDbContext.Employees.AddAsync(employee, cancellationToken);
+        var entityEntry = await _officeDbContext.Employees.AddAsync(employee, cancellationToken);
         await _officeDbContext.SaveChangesAsync(cancellationToken);
+        return entityEntry.Entity;
     }
 
     public async Task DeleteEmployeeAsync(BaseEmployeeEntity employee, CancellationToken cancellationToken = default)
@@ -38,9 +38,10 @@ public class EmployeeRepository : IEmployeeRepository
         await _officeDbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task UpdateEmployeeAsync(BaseEmployeeEntity employee, CancellationToken cancellationToken = default)
+    public async Task<BaseEmployeeEntity> UpdateEmployeeAsync(BaseEmployeeEntity employee, CancellationToken cancellationToken = default)
     {
-        _officeDbContext.Employees.Update(employee);
+        var entityEntry = _officeDbContext.Employees.Update(employee);
         await _officeDbContext.SaveChangesAsync(cancellationToken);
+        return entityEntry.Entity;
     }
 }

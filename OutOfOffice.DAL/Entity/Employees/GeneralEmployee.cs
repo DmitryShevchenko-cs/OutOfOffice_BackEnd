@@ -16,7 +16,7 @@ public class GeneralEmployee : BaseEmployeeEntity
     public int? HrMangerId { get; set; }
     public HrManager HrManager { get; set; } = null!;
     
-    public IEnumerable<LeaveRequest> LeaveRequests { get; set; } = null!;
-    public IEnumerable<Project> Projects { get; set; } = null!;
+    public ICollection<LeaveRequest> LeaveRequests { get; set; } = null!;
+    public ICollection<Project> Projects { get; set; } = null!;
     
 }
