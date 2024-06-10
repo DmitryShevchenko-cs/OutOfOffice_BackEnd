@@ -30,6 +30,8 @@ public class OfficeDbContext : DbContext
     
     public DbSet<AuthorizationInfo> AuthorizationInfos { get; set; }
     
+    public DbSet<AdminEntity> Admins { get; set; }
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(OfficeDbContext).Assembly);

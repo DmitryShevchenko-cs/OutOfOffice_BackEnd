@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OutOfOffice.DAL;
 
@@ -11,9 +12,11 @@ using OutOfOffice.DAL;
 namespace OutOfOffice.DAL.Migrations
 {
     [DbContext(typeof(OfficeDbContext))]
-    partial class OfficeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240610000058_Admin_Migration")]
+    partial class Admin_Migration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +25,7 @@ namespace OutOfOffice.DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("GeneralEmployeeProject", b =>
+            modelBuilder.Entity("EmployeeProject", b =>
                 {
                     b.Property<int>("EmployeesId")
                         .HasColumnType("int");
@@ -34,7 +37,7 @@ namespace OutOfOffice.DAL.Migrations
 
                     b.HasIndex("ProjectsId");
 
-                    b.ToTable("GeneralEmployeeProject");
+                    b.ToTable("EmployeeProject");
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.ApprovalRequest", b =>
@@ -336,7 +339,7 @@ namespace OutOfOffice.DAL.Migrations
                     b.HasDiscriminator().HasValue("ProjectManager");
                 });
 
-            modelBuilder.Entity("GeneralEmployeeProject", b =>
+            modelBuilder.Entity("EmployeeProject", b =>
                 {
                     b.HasOne("OutOfOffice.DAL.Entity.Employees.GeneralEmployee", null)
                         .WithMany()
