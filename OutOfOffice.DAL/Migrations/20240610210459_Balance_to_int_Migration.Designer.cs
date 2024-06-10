@@ -12,7 +12,7 @@ using OutOfOffice.DAL;
 namespace OutOfOffice.DAL.Migrations
 {
     [DbContext(typeof(OfficeDbContext))]
-    [Migration("20240610205213_Balance_to_int_Migration")]
+    [Migration("20240610210459_Balance_to_int_Migration")]
     partial class Balance_to_int_Migration
     {
         /// <inheritdoc />
@@ -285,13 +285,6 @@ namespace OutOfOffice.DAL.Migrations
                     b.ToTable("Subdivisions");
                 });
 
-            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.Admin", b =>
-                {
-                    b.HasBaseType("OutOfOffice.DAL.Entity.Employees.BaseEmployeeEntity");
-
-                    b.HasDiscriminator().HasValue("Admin");
-                });
-
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.BaseManagerEntity", b =>
                 {
                     b.HasBaseType("OutOfOffice.DAL.Entity.Employees.BaseEmployeeEntity");
@@ -329,6 +322,13 @@ namespace OutOfOffice.DAL.Migrations
                     b.HasIndex("SubdivisionId");
 
                     b.HasDiscriminator().HasValue("GeneralEmployee");
+                });
+
+            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.Admin", b =>
+                {
+                    b.HasBaseType("OutOfOffice.DAL.Entity.Employees.BaseManagerEntity");
+
+                    b.HasDiscriminator().HasValue("Admin");
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.HrManager", b =>

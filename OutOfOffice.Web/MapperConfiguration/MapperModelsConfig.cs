@@ -68,6 +68,8 @@ public class MapperModelsConfig : AutoMapper.Profile
         CreateMap<BaseManagerModel, EmployeeUpdateModel>()
             .ReverseMap();
         
+        CreateMap<BaseManagerModel, EmployeeViewModel>()
+            .ReverseMap();
 
     }
 }

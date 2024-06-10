@@ -282,13 +282,6 @@ namespace OutOfOffice.DAL.Migrations
                     b.ToTable("Subdivisions");
                 });
 
-            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.Admin", b =>
-                {
-                    b.HasBaseType("OutOfOffice.DAL.Entity.Employees.BaseEmployeeEntity");
-
-                    b.HasDiscriminator().HasValue("Admin");
-                });
-
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.BaseManagerEntity", b =>
                 {
                     b.HasBaseType("OutOfOffice.DAL.Entity.Employees.BaseEmployeeEntity");
@@ -326,6 +319,13 @@ namespace OutOfOffice.DAL.Migrations
                     b.HasIndex("SubdivisionId");
 
                     b.HasDiscriminator().HasValue("GeneralEmployee");
+                });
+
+            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.Admin", b =>
+                {
+                    b.HasBaseType("OutOfOffice.DAL.Entity.Employees.BaseManagerEntity");
+
+                    b.HasDiscriminator().HasValue("Admin");
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.HrManager", b =>

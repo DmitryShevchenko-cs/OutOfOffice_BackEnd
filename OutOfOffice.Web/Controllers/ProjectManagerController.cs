@@ -43,10 +43,10 @@ public class ManagerController : ControllerBase
     }
     
     [HttpPut]
-    public async Task<IActionResult> UpdateManager([FromBody] EmployeeUpdateModel manager, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateManager([FromBody] EmployeeUpdateModel employee, CancellationToken cancellationToken)
     {
         var managerId = User.GetUserId();
-        var updatedManager = await _managerService.UpdateManagerAsync(managerId,_mapper.Map<BaseManagerModel>(manager), cancellationToken);
+        var updatedManager = await _managerService.UpdateManagerAsync(managerId,_mapper.Map<BaseManagerModel>(employee), cancellationToken);
         return Ok(updatedManager);
     }
 
@@ -57,6 +57,14 @@ public class ManagerController : ControllerBase
         var adminId = User.GetUserId();
         await _managerService.DeleteManagerAsync(adminId, managerId, cancellationToken);
         return Ok();
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetUser(CancellationToken cancellationToken = default)
+    {
+        var userId = User.GetUserId();
+        var user = await _managerService.GetByIdAsync(userId, cancellationToken);
+        return Ok(_mapper.Map<EmployeeViewModel>(user));
     }
 
 }
