@@ -23,7 +23,7 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<ActionResult> AuthorizeEmployee([FromBody] EmployeeAuthorizeModel model, CancellationToken cancellationToken)
+    public async Task<ActionResult> AuthorizeEmployee([FromBody] AuthorizeModel model, CancellationToken cancellationToken)
     {
         var employee = await _authEmployeeService.GetByLoginAndPasswordAsync(model.Login, model.Password, cancellationToken);
         var token = _tokenHelper.GetToken(employee.Id);

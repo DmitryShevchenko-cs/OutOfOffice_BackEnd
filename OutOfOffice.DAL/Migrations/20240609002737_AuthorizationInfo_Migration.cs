@@ -73,10 +73,10 @@ namespace OutOfOffice.DAL.Migrations
                 nullable: false,
                 defaultValue: "");
 
-            migrationBuilder.AddColumn<decimal>(
+            migrationBuilder.AddColumn<int>(
                 name: "OutOfOfficeBalance",
                 table: "BaseEmployees",
-                type: "decimal(18,2)",
+                type: "int",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
@@ -344,7 +344,7 @@ namespace OutOfOffice.DAL.Migrations
                     PositionId = table.Column<int>(type: "int", nullable: false),
                     SubdivisionId = table.Column<int>(type: "int", nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OutOfOfficeBalance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    OutOfOfficeBalance = table.Column<int>(type: "int", nullable: false),
                     Photo = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },

@@ -2,7 +2,7 @@ using OutOfOffice.DAL.Entity.Selections;
 
 namespace OutOfOffice.BLL.Models.Employees;
 
-public class GeneralEmployeeModel : BaseEmployeeModel
+public class EmployeeModel : BaseEmployeeModel
 {
     public int? SubdivisionId { get; set; }
     public Subdivision Subdivision { get; set; }= null!;

@@ -7,7 +7,7 @@ namespace OutOfOffice.DAL.Entity;
 public class LeaveRequest : BaseEntity
 {
     public int EmployeeId { get; set; }
-    public GeneralEmployee GeneralEmployee { get; set; } = null!;
+    public Employee Employee { get; set; } = null!;
     
     public int AbsenceReasonId { get; set; }
     public AbsenceReason AbsenceReason { get; set; }= null!;

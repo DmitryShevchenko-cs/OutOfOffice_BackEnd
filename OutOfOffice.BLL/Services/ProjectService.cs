@@ -105,13 +105,13 @@ public class ProjectService : IProjectService
     {
         // get employee who is not a general employee
         var manager = await _employeeRepository.GetAll()
-            .SingleOrDefaultAsync(r => r.Id == projectManagerId && !(r is GeneralEmployee), cancellationToken);
+            .SingleOrDefaultAsync(r => r.Id == projectManagerId && !(r is Employee), cancellationToken);
         if (manager is null)
             throw new EmployeeNotFoundException($"Manger or Admin with Id {projectManagerId} not found");
 
         //get all employees which are GeneralEmployee
         var employees = await _employeeRepository.GetAll()
-            .Where(r => employeeModelsIds.Contains(r.Id) && r is GeneralEmployee).ToListAsync(cancellationToken);
+            .Where(r => employeeModelsIds.Contains(r.Id) && r is Employee).ToListAsync(cancellationToken);
 
         if (employees.Any())
         {
@@ -120,7 +120,7 @@ public class ProjectService : IProjectService
                 throw new ProjectNotFoundException($"Project with Id {projectId} not found");
             
             var newEmployeesList = projectDb.Employees.Concat(employees).ToList();
-            projectDb.Employees = _mapper.Map<List<GeneralEmployee>>(newEmployeesList);
+            projectDb.Employees = _mapper.Map<List<Employee>>(newEmployeesList);
         }
         else
         {

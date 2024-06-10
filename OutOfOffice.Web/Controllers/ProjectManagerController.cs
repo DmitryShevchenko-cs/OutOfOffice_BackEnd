@@ -26,28 +26,28 @@ public class ManagerController : ControllerBase
     
     //admin has to authorize
     [HttpPost("project-manager")]
-    public async Task<IActionResult> CreateProjectManager([FromBody] EmployeeCreateModel manager, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateProjectManager([FromBody] ManagerCreateModel manager, CancellationToken cancellationToken)
     {
         var adminId = User.GetUserId();
         var managerResult = await _managerService.CreateProjectManagerAsync(adminId,_mapper.Map<ProjectManagerModel>(manager), cancellationToken);
-        return Ok(managerResult);
+        return Ok(_mapper.Map<ManagerViewModel>(managerResult));
     }
     
     //admin has to authorize
     [HttpPost("hr-manager")]
-    public async Task<IActionResult> CreateHrManager([FromBody] EmployeeCreateModel manager, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateHrManager([FromBody] ManagerCreateModel manager, CancellationToken cancellationToken)
     {
         var adminId = User.GetUserId();
         var managerResult = await _managerService.CreateProjectManagerAsync(adminId,_mapper.Map<HrManagerModel>(manager), cancellationToken);
-        return Ok(managerResult);
+        return Ok(_mapper.Map<ManagerViewModel>(managerResult));
     }
     
     [HttpPut]
-    public async Task<IActionResult> UpdateManager([FromBody] EmployeeUpdateModel employee, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateManager([FromBody] ManagerUpdateModel manager, CancellationToken cancellationToken)
     {
         var managerId = User.GetUserId();
-        var updatedManager = await _managerService.UpdateManagerAsync(managerId,_mapper.Map<BaseManagerModel>(employee), cancellationToken);
-        return Ok(updatedManager);
+        var updatedManager = await _managerService.UpdateManagerAsync(managerId,_mapper.Map<BaseManagerModel>(manager), cancellationToken);
+        return Ok(_mapper.Map<ManagerViewModel>(updatedManager));
     }
 
     //only admin can delete managers
@@ -64,7 +64,7 @@ public class ManagerController : ControllerBase
     {
         var userId = User.GetUserId();
         var user = await _managerService.GetByIdAsync(userId, cancellationToken);
-        return Ok(_mapper.Map<EmployeeViewModel>(user));
+        return Ok(_mapper.Map<ManagerViewModel>(user));
     }
 
 }

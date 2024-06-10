@@ -2,6 +2,7 @@ using OutOfOffice.BLL.Models;
 using OutOfOffice.BLL.Models.Employees;
 using OutOfOffice.DAL.Entity;
 using OutOfOffice.DAL.Entity.Employees;
+using OutOfOffice.DAL.Entity.Selections;
 using OutOfOffice.Web.Models;
 using AuthorizationInfo = OutOfOffice.DAL.Entity.AuthorizationInfo;
 
@@ -20,7 +21,7 @@ public class MapperModelsConfig : AutoMapper.Profile
         CreateMap<BaseManagerEntity, BaseManagerModel>()
             .ReverseMap();
         
-        CreateMap<GeneralEmployee, GeneralEmployeeModel>()
+        CreateMap<Employee, EmployeeModel>()
             .ReverseMap();
         
         CreateMap<HrManager, HrManagerModel>()
@@ -43,14 +44,14 @@ public class MapperModelsConfig : AutoMapper.Profile
         CreateMap<Project, ProjectModel>()
             .ReverseMap();
         
-        CreateMap<GeneralEmployee, BaseEmployeeModel>()
+        CreateMap<Employee, BaseEmployeeModel>()
             .ReverseMap();
         
-        CreateMap<BaseManagerModel, EmployeeCreateModel>()
+        CreateMap<BaseManagerModel, ManagerCreateModel>()
             .ReverseMap();
-        CreateMap<ProjectManagerModel, EmployeeCreateModel>()
+        CreateMap<ProjectManagerModel, ManagerCreateModel>()
             .ReverseMap();
-        CreateMap<HrManagerModel, EmployeeCreateModel>()
+        CreateMap<HrManagerModel, ManagerCreateModel>()
             .ReverseMap();
         
         CreateMap<BaseManagerModel, ProjectManager>()
@@ -59,16 +60,27 @@ public class MapperModelsConfig : AutoMapper.Profile
         CreateMap<BaseManagerModel, HrManager>()
             .ReverseMap();
         
-        CreateMap<GeneralEmployee, BaseEmployeeEntity>()
+        CreateMap<Employee, BaseEmployeeEntity>()
             .ReverseMap();
         
         CreateMap<BaseManagerEntity, ProjectManager>()
             .ReverseMap();
         
-        CreateMap<BaseManagerModel, EmployeeUpdateModel>()
+        CreateMap<BaseManagerModel, ManagerUpdateModel>()
             .ReverseMap();
         
-        CreateMap<BaseManagerModel, EmployeeViewModel>()
+        CreateMap<BaseManagerModel, ManagerViewModel>()
+            .ReverseMap();
+        
+        CreateMap<SelectionViewModel, Position>()
+            .ReverseMap();
+        CreateMap<SelectionViewModel, Subdivision>()
+            .ReverseMap();
+        
+        CreateMap<EmployeeViewModel, EmployeeModel>()
+            .ReverseMap();
+        
+        CreateMap<EmployeeCreateModel, EmployeeModel>()
             .ReverseMap();
 
     }

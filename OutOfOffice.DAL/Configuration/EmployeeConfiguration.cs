@@ -5,9 +5,9 @@ using OutOfOffice.DAL.Entity.Employees;
 
 namespace OutOfOffice.DAL.Configuration;
 
-public class EmployeeConfiguration : IEntityTypeConfiguration<GeneralEmployee>
+public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
 {
-    public void Configure(EntityTypeBuilder<GeneralEmployee> builder)
+    public void Configure(EntityTypeBuilder<Employee> builder)
     {
         builder.HasIndex(r => r.Id);
         
@@ -30,7 +30,7 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<GeneralEmployee>
             .HasColumnType("decimal(18,2)");
         
         builder.HasOne(i => i.AuthorizationInfo)
-            .WithOne(i => (GeneralEmployee)i.Employee)
+            .WithOne(i => (Employee)i.Employee)
             .HasForeignKey<AuthorizationInfo>(i => i.EmployeeId);
     }
 }

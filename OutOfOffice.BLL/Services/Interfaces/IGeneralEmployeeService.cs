@@ -3,10 +3,10 @@ using OutOfOffice.BLL.Models.Employees;
 
 namespace OutOfOffice.BLL.Services.Interfaces;
 
-public interface IGeneralEmployeeService : IBasicService<GeneralEmployeeModel>
+public interface IGeneralEmployeeService : IBasicService<EmployeeModel>
 {
-    Task<GeneralEmployeeModel> CreateEmployeeAsync(GeneralEmployeeModel employeeModel, CancellationToken cancellationToken = default);
-    Task<GeneralEmployeeModel> UpdateEmployeeAsync(GeneralEmployeeModel employeeModel, CancellationToken cancellationToken = default);
+    Task<EmployeeModel> CreateEmployeeAsync(int managerId, EmployeeModel employeeModel, CancellationToken cancellationToken = default);
+    Task<EmployeeModel> UpdateEmployeeAsync(EmployeeModel employeeModel, CancellationToken cancellationToken = default);
     Task DeleteEmployeeAsync(int id, CancellationToken cancellationToken = default);
     
 }

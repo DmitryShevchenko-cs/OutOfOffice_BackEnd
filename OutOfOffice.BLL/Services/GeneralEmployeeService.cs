@@ -21,34 +21,38 @@ public class GeneralEmployeeService : IGeneralEmployeeService
         _mapper = mapper;
     }
 
-    public async Task<GeneralEmployeeModel?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<EmployeeModel?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         var employeeDb = await _employeeRepository.GetByIdAsync(id, cancellationToken);
         
         if (employeeDb is null)
             throw new EmployeeNotFoundException($"Employee with Id {id} not found");
         
-        var employeeModel = _mapper.Map<GeneralEmployeeModel>(employeeDb);
+        var employeeModel = _mapper.Map<EmployeeModel>(employeeDb);
         return employeeModel;
     }
 
-    public async Task<GeneralEmployeeModel> CreateEmployeeAsync(GeneralEmployeeModel employeeModel, CancellationToken cancellationToken = default)
+    public async Task<EmployeeModel> CreateEmployeeAsync(int managerId, EmployeeModel employeeModel, CancellationToken cancellationToken = default)
     {
+        var creator = await _employeeRepository.GetAll().Where(r => r.Id == managerId && (r is HrManager || r is Admin)).SingleOrDefaultAsync(cancellationToken);
+        if (creator is null)
+            throw new EmployeeNotFoundException($"Manager with Id {managerId} not found");
+        
         var employeeDb = await _employeeRepository.GetAll().FirstOrDefaultAsync(i => i.Login == employeeModel.Login, cancellationToken);
-
         if (employeeDb is not null)
         {
             if (employeeDb.Login == employeeModel.Login)
                 throw new AlreadyLoginException("Login is already used by another employee");
         }
         
-        var employee = _mapper.Map<GeneralEmployee>(employeeModel);
-        employee.Password = PasswordHelper.HashPassword(employee.Password);
-        await _employeeRepository.AddEmployeeAsync(employee, cancellationToken);
-        return _mapper.Map<GeneralEmployeeModel>(employee);
+        employeeModel.Password = PasswordHelper.HashPassword(employeeModel.Password);
+        if (creator is HrManager)
+            employeeModel.HrMangerId = creator.Id;
+        employeeDb = await _employeeRepository.AddEmployeeAsync(_mapper.Map<Employee>(employeeModel), cancellationToken);
+        return _mapper.Map<EmployeeModel>(await _employeeRepository.GetByIdAsync(employeeDb.Id, cancellationToken));
     }
 
-    public async Task<GeneralEmployeeModel> UpdateEmployeeAsync(GeneralEmployeeModel employeeModel, CancellationToken cancellationToken = default)
+    public async Task<EmployeeModel> UpdateEmployeeAsync(EmployeeModel employeeModel, CancellationToken cancellationToken = default)
     {
         var employeeDb = await _employeeRepository.GetByIdAsync(employeeModel.Id, cancellationToken);
         

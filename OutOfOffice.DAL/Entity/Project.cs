@@ -14,7 +14,7 @@ public class Project : BaseEntity
     public string Comment { get; set; } = null!;
     public bool Status { get; set; }
     
-    public ICollection<GeneralEmployee> Employees { get; set; } = null!;
+    public ICollection<Employee> Employees { get; set; } = null!;
     
     public bool isDeactivated { get; set; }
     

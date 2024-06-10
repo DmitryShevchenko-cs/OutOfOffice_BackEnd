@@ -22,7 +22,7 @@ namespace OutOfOffice.DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("GeneralEmployeeProject", b =>
+            modelBuilder.Entity("EmployeeProject", b =>
                 {
                     b.Property<int>("EmployeesId")
                         .HasColumnType("int");
@@ -34,7 +34,7 @@ namespace OutOfOffice.DAL.Migrations
 
                     b.HasIndex("ProjectsId");
 
-                    b.ToTable("GeneralEmployeeProject");
+                    b.ToTable("EmployeeProject");
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.ApprovalRequest", b =>
@@ -129,7 +129,7 @@ namespace OutOfOffice.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Employees");
+                    b.ToTable("BaseEmployees");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("BaseEmployeeEntity");
 
@@ -160,9 +160,6 @@ namespace OutOfOffice.DAL.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("GeneralEmployeeId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
@@ -170,7 +167,7 @@ namespace OutOfOffice.DAL.Migrations
 
                     b.HasIndex("AbsenceReasonId");
 
-                    b.HasIndex("GeneralEmployeeId");
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("LeaveRequests");
                 });
@@ -289,7 +286,7 @@ namespace OutOfOffice.DAL.Migrations
                     b.HasDiscriminator().HasValue("BaseManagerEntity");
                 });
 
-            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.GeneralEmployee", b =>
+            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.Employee", b =>
                 {
                     b.HasBaseType("OutOfOffice.DAL.Entity.Employees.BaseEmployeeEntity");
 
@@ -318,7 +315,7 @@ namespace OutOfOffice.DAL.Migrations
 
                     b.HasIndex("SubdivisionId");
 
-                    b.HasDiscriminator().HasValue("GeneralEmployee");
+                    b.HasDiscriminator().HasValue("Employee");
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.Admin", b =>
@@ -342,9 +339,9 @@ namespace OutOfOffice.DAL.Migrations
                     b.HasDiscriminator().HasValue("ProjectManager");
                 });
 
-            modelBuilder.Entity("GeneralEmployeeProject", b =>
+            modelBuilder.Entity("EmployeeProject", b =>
                 {
-                    b.HasOne("OutOfOffice.DAL.Entity.Employees.GeneralEmployee", null)
+                    b.HasOne("OutOfOffice.DAL.Entity.Employees.Employee", null)
                         .WithMany()
                         .HasForeignKey("EmployeesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -395,15 +392,15 @@ namespace OutOfOffice.DAL.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("OutOfOffice.DAL.Entity.Employees.GeneralEmployee", "GeneralEmployee")
+                    b.HasOne("OutOfOffice.DAL.Entity.Employees.Employee", "Employee")
                         .WithMany("LeaveRequests")
-                        .HasForeignKey("GeneralEmployeeId")
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("AbsenceReason");
 
-                    b.Navigation("GeneralEmployee");
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Project", b =>
@@ -425,7 +422,7 @@ namespace OutOfOffice.DAL.Migrations
                     b.Navigation("ProjectType");
                 });
 
-            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.GeneralEmployee", b =>
+            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.Employee", b =>
                 {
                     b.HasOne("OutOfOffice.DAL.Entity.Employees.HrManager", "HrManager")
                         .WithMany("Partners")
@@ -486,7 +483,7 @@ namespace OutOfOffice.DAL.Migrations
                     b.Navigation("ApprovalRequest");
                 });
 
-            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.GeneralEmployee", b =>
+            modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.Employee", b =>
                 {
                     b.Navigation("LeaveRequests");
                 });

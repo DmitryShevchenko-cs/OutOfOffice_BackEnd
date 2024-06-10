@@ -300,8 +300,8 @@ namespace OutOfOffice.DAL.Migrations
                     b.Property<int?>("HrMangerId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("OutOfOfficeBalance")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("OutOfOfficeBalance")
+                        .HasColumnType("int");
 
                     b.Property<int?>("PositionId")
                         .IsRequired()

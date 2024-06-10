@@ -2,7 +2,7 @@ using OutOfOffice.DAL.Entity.Selections;
 
 namespace OutOfOffice.DAL.Entity.Employees;
 
-public class GeneralEmployee : BaseEmployeeEntity
+public class Employee : BaseEmployeeEntity
 {
     public int? SubdivisionId { get; set; }
     public Subdivision Subdivision { get; set; }= null!;

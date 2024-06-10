@@ -6,7 +6,7 @@ namespace OutOfOffice.BLL.Models;
 public class LeaveRequestModel
 {
     public int EmployeeId { get; set; }
-    public GeneralEmployeeModel GeneralEmployee { get; set; } = null!;
+    public EmployeeModel Employee { get; set; } = null!;
     
     public int AbsenceReasonId { get; set; }
     public AbsenceReason AbsenceReason { get; set; }= null!;
