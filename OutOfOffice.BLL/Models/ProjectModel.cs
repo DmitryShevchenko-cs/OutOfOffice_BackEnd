@@ -16,4 +16,5 @@ public class ProjectModel : BaseModel
     public bool Status { get; set; }
     
     public ICollection<EmployeeModel> Employees { get; set; } = null!;
+    public bool isDeactivated { get; set; }
 }

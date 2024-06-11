@@ -2,5 +2,6 @@ namespace OutOfOffice.Web.Models;
 
 public class SelectionViewModel
 {
-    public string Name { get; set; }
+    public int Id { get; set; }
+    public string Name { get; set; } = null!;
 }

@@ -15,6 +15,9 @@ public class MapperModelsConfig : AutoMapper.Profile
         CreateMap<BaseEmployeeEntity, BaseEmployeeModel>()
             .ReverseMap();
         
+        CreateMap<EmployeeModel, BaseEmployeeModel>()
+            .ReverseMap();
+        
         CreateMap<Admin, AdminModel>()
             .ReverseMap();
         
@@ -54,40 +57,40 @@ public class MapperModelsConfig : AutoMapper.Profile
         CreateMap<HrManagerModel, ManagerCreateModel>()
             .ReverseMap();
         
-        CreateMap<BaseManagerModel, ProjectManager>()
-            .ReverseMap();
-        
-        CreateMap<BaseManagerModel, HrManager>()
-            .ReverseMap();
-        
         CreateMap<Employee, BaseEmployeeEntity>()
             .ReverseMap();
         
+        CreateMap<BaseManagerModel, ProjectManager>()
+            .ReverseMap();
+        CreateMap<BaseManagerModel, HrManager>()
+            .ReverseMap();
         CreateMap<BaseManagerEntity, ProjectManager>()
             .ReverseMap();
-        
         CreateMap<BaseManagerModel, ManagerUpdateModel>()
             .ReverseMap();
-        
         CreateMap<BaseManagerModel, ManagerViewModel>()
             .ReverseMap();
         
         CreateMap<SelectionViewModel, Position>()
+            .ForMember(m => m.Employees, o => o.Ignore())
             .ReverseMap();
         CreateMap<SelectionViewModel, Subdivision>()
+            .ForMember(m => m.Employees, o => o.Ignore())
             .ReverseMap();
         CreateMap<SelectionViewModel, ProjectType>()
+            .ForMember(m => m.Projects, o => o.Ignore())
             .ReverseMap();
         
         CreateMap<EmployeeViewModel, EmployeeModel>()
             .ReverseMap();
-        
         CreateMap<EmployeeCreateModel, EmployeeModel>()
             .ReverseMap();
         
         CreateMap<ProjectViewModel, ProjectModel>()
             .ReverseMap();
         CreateMap<ProjectCreateModel, ProjectModel>()
+            .ReverseMap();
+        CreateMap<ProjectUpdateModel, ProjectModel>()
             .ReverseMap();
         
 

@@ -5,7 +5,7 @@
 namespace OutOfOffice.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class Name_Changes_Migration : Migration
+    public partial class Name_Changed_migration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -49,6 +49,10 @@ namespace OutOfOffice.DAL.Migrations
                 name: "PK_Employees",
                 table: "Employees");
 
+            migrationBuilder.DropIndex(
+                name: "IX_Employees_Id",
+                table: "Employees");
+
             migrationBuilder.DropColumn(
                 name: "GeneralEmployeeId",
                 table: "LeaveRequests");
@@ -66,11 +70,6 @@ namespace OutOfOffice.DAL.Migrations
                 name: "IX_Employees_PositionId",
                 table: "BaseEmployees",
                 newName: "IX_BaseEmployees_PositionId");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_Employees_Id",
-                table: "BaseEmployees",
-                newName: "IX_BaseEmployees_Id");
 
             migrationBuilder.RenameIndex(
                 name: "IX_Employees_HrMangerId",
@@ -230,11 +229,6 @@ namespace OutOfOffice.DAL.Migrations
                 newName: "IX_Employees_PositionId");
 
             migrationBuilder.RenameIndex(
-                name: "IX_BaseEmployees_Id",
-                table: "Employees",
-                newName: "IX_Employees_Id");
-
-            migrationBuilder.RenameIndex(
                 name: "IX_BaseEmployees_HrMangerId",
                 table: "Employees",
                 newName: "IX_Employees_HrMangerId");
@@ -279,6 +273,11 @@ namespace OutOfOffice.DAL.Migrations
                 name: "IX_LeaveRequests_GeneralEmployeeId",
                 table: "LeaveRequests",
                 column: "GeneralEmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employees_Id",
+                table: "Employees",
+                column: "Id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GeneralEmployeeProject_ProjectsId",

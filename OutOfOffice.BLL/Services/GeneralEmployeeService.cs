@@ -72,4 +72,15 @@ public class GeneralEmployeeService : IGeneralEmployeeService
 
         await _employeeRepository.DeleteEmployeeAsync(employeeDb, cancellationToken);
     }
+
+    public async Task<List<EmployeeModel>> GetEmployeeAsync(int managerId, CancellationToken cancellationToken = default)
+    {
+        var creator = await _employeeRepository.GetAll().Where(r => r.Id == managerId && (r is HrManager || r is Admin)).SingleOrDefaultAsync(cancellationToken);
+        if (creator is null)
+            throw new EmployeeNotFoundException($"Manager with Id {managerId} not found");
+        
+        var employees = await _employeeRepository.GetAll().Include(r => ((Employee)r).Projects).Where(r => r is Employee).ToListAsync(cancellationToken);
+        var employeesModels = _mapper.Map<List<BaseEmployeeModel>>(employees);
+        return _mapper.Map<List<EmployeeModel>>(employeesModels);
+    }
 }

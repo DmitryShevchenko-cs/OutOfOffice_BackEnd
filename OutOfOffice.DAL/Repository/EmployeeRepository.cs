@@ -16,7 +16,10 @@ public class EmployeeRepository : IEmployeeRepository
 
     public IQueryable<BaseEmployeeEntity> GetAll()
     {
-        return _officeDbContext.BaseEmployees.AsQueryable();
+        return _officeDbContext.BaseEmployees
+            .Include(r => ((Employee)r).Subdivision)
+            .Include(r => ((Employee)r).Position)
+            .AsQueryable();
     }
 
     public async Task<BaseEmployeeEntity?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
@@ -47,5 +50,10 @@ public class EmployeeRepository : IEmployeeRepository
         var entityEntry = _officeDbContext.BaseEmployees.Update(employee);
         await _officeDbContext.SaveChangesAsync(cancellationToken);
         return entityEntry.Entity;
+    }
+    public async Task UpdateEmployeeAsync(List<BaseEmployeeEntity> employee, CancellationToken cancellationToken = default)
+    {
+        _officeDbContext.BaseEmployees.UpdateRange(employee);
+        await _officeDbContext.SaveChangesAsync(cancellationToken);
     }
 }

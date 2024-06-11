@@ -31,5 +31,14 @@ public class EmployeeController : ControllerBase
         return Ok(_mapper.Map<EmployeeViewModel>(employee));
     }
     
+    //only HR or Admin
+    [HttpGet]
+    public async Task<IActionResult> GetEmployee(CancellationToken cancellationToken = default)
+    {
+        var managerId = User.GetUserId();
+        var employees = await _employeeService.GetEmployeeAsync(managerId, cancellationToken);
+        return Ok(_mapper.Map<List<EmployeeViewModel>>(employees));
+    }
+    
     
 }

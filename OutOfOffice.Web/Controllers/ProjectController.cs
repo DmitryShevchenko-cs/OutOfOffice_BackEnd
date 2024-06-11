@@ -30,4 +30,60 @@ public class ProjectController : ControllerBase
         return Ok(_mapper.Map<ProjectViewModel>(project));
     }
     
+    [HttpDelete("{projectId:int}")]
+    public async Task<IActionResult> DeleteProject(int projectId, CancellationToken cancellationToken = default)
+    {
+        var userId = User.GetUserId();
+        await _projectService.DeleteProjectAsync(projectId, userId, cancellationToken);
+        return Ok();
+    }
+    
+    [HttpPut]
+    public async Task<IActionResult> UpdateProject([FromBody]ProjectUpdateModel projectCreateModel, CancellationToken cancellationToken = default)
+    {
+        var userId = User.GetUserId();
+        await _projectService.UpdateProjectAsync(userId,_mapper.Map<ProjectModel>(projectCreateModel), cancellationToken);
+        return Ok();
+    }
+    
+    [HttpPut("deactivate/{projectId:int}")]
+    public async Task<IActionResult> DeactivateProject(int projectId, CancellationToken cancellationToken = default)
+    {
+        var userId = User.GetUserId();
+        await _projectService.DeactivateProjectAsync(projectId, userId, cancellationToken);
+        return Ok();
+    }
+    
+    [HttpPut("employees")]
+    public async Task<IActionResult> AddEmployeesProject([FromBody]AddEmployeesModel addEmployeesModel, CancellationToken cancellationToken = default)
+    {
+        var userId = User.GetUserId();
+        await _projectService.AddEmployeesInProject(userId, addEmployeesModel.ProjectId, addEmployeesModel.EmployeesIds, cancellationToken);
+        return Ok();
+    }
+
+    [HttpGet("project-manager")]
+    public async Task<IActionResult> GetAllByProjectManager([FromQuery] int projectManagerId, CancellationToken cancellationToken)
+    {
+        var userId = User.GetUserId();
+        var projects = await _projectService.GetAllByProjectManagerIdAsync(userId, cancellationToken);
+        return Ok(projects);
+    }
+    
+    [HttpGet("hr-manager")]
+    public async Task<IActionResult> GetAllByHrManager([FromQuery] int hrManagerId, CancellationToken cancellationToken)
+    {
+        var userId = User.GetUserId();
+        var projects = await _projectService.GetAllByHrManagerId(userId, cancellationToken);
+        return Ok(projects);
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetAllByHrManager(CancellationToken cancellationToken)
+    {
+        var userId = User.GetUserId();
+        var projects = await _projectService.GetAll(userId, cancellationToken);
+        return Ok(projects);
+    }
+
 }

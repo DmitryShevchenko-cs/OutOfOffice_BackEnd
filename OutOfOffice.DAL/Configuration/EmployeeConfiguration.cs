@@ -9,8 +9,6 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
 {
     public void Configure(EntityTypeBuilder<Employee> builder)
     {
-        builder.HasIndex(r => r.Id);
-        
         builder.HasOne(r => r.Subdivision)
             .WithMany(r => r.Employees)
             .HasForeignKey(r => r.SubdivisionId)
@@ -25,9 +23,6 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
             .WithMany(r => r.Partners)
             .HasForeignKey(r => r.PositionId)
             .OnDelete(DeleteBehavior.Restrict);
-        
-        builder.Property(e => e.OutOfOfficeBalance)
-            .HasColumnType("decimal(18,2)");
         
         builder.HasOne(i => i.AuthorizationInfo)
             .WithOne(i => (Employee)i.Employee)

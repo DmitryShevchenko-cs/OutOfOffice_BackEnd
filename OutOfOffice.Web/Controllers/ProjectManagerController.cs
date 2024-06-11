@@ -13,32 +13,23 @@ namespace OutOfOffice.Web.Controllers;
 [Authorize]
 [Route("api/[controller]")]
 [ApiController]
-public class ManagerController : ControllerBase
+public class ProjectManagerController : ControllerBase
 {
     private readonly IManagerService _managerService;
     private readonly IMapper _mapper;
 
-    public ManagerController(IManagerService managerService, IMapper mapper)
+    public ProjectManagerController(IManagerService managerService, IMapper mapper)
     {
         _managerService = managerService;
         _mapper = mapper;
     }
     
     //admin has to authorize
-    [HttpPost("project-manager")]
+    [HttpPost]
     public async Task<IActionResult> CreateProjectManager([FromBody] ManagerCreateModel manager, CancellationToken cancellationToken)
     {
         var adminId = User.GetUserId();
         var managerResult = await _managerService.CreateProjectManagerAsync(adminId,_mapper.Map<ProjectManagerModel>(manager), cancellationToken);
-        return Ok(_mapper.Map<ManagerViewModel>(managerResult));
-    }
-    
-    //admin has to authorize
-    [HttpPost("hr-manager")]
-    public async Task<IActionResult> CreateHrManager([FromBody] ManagerCreateModel manager, CancellationToken cancellationToken)
-    {
-        var adminId = User.GetUserId();
-        var managerResult = await _managerService.CreateProjectManagerAsync(adminId,_mapper.Map<HrManagerModel>(manager), cancellationToken);
         return Ok(_mapper.Map<ManagerViewModel>(managerResult));
     }
     
