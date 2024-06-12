@@ -15,7 +15,10 @@ public class LeaveRequestRepository : ILeaveRequestRepository
 
     public IQueryable<LeaveRequest> GetAll()
     {
-        return _officeDbContext.LeaveRequests.AsQueryable();
+        return _officeDbContext.LeaveRequests
+            .Include(r => r.AbsenceReason)
+            .Include(r => r.ApprovalRequest)
+            .AsQueryable();
     }
 
     public async Task<LeaveRequest?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
@@ -23,10 +26,11 @@ public class LeaveRequestRepository : ILeaveRequestRepository
         return await _officeDbContext.LeaveRequests.SingleOrDefaultAsync(r => r.Id == id, cancellationToken);
     }
 
-    public async Task CreateLeaveRequestAsync(LeaveRequest request, CancellationToken cancellationToken = default)
+    public async Task<LeaveRequest> CreateLeaveRequestAsync(LeaveRequest request, CancellationToken cancellationToken = default)
     {
-        await _officeDbContext.LeaveRequests.AddAsync(request, cancellationToken);
+        var entityEntry =  await _officeDbContext.LeaveRequests.AddAsync(request, cancellationToken);
         await _officeDbContext.SaveChangesAsync(cancellationToken);
+        return entityEntry.Entity;
     }
 
     public async Task DeleteLeaveRequestAsync(LeaveRequest request, CancellationToken cancellationToken = default)

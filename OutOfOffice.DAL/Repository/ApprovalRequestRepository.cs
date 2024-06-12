@@ -24,10 +24,11 @@ public class ApprovalRequestRepository : IApprovalRequestRepository
         return await _officeDbContext.ApprovalRequests.SingleOrDefaultAsync(r => r.Id == id, cancellationToken);
     }
 
-    public async Task ApproveRequestAsync(ApprovalRequest request, CancellationToken cancellationToken = default)
+    public async Task<ApprovalRequest> ApproveRequestAsync(ApprovalRequest request, CancellationToken cancellationToken = default)
     {
-        await _officeDbContext.ApprovalRequests.AddAsync(request, cancellationToken);
+        var entityEntry = await _officeDbContext.ApprovalRequests.AddAsync(request, cancellationToken);
         await _officeDbContext.SaveChangesAsync(cancellationToken);
+        return entityEntry.Entity;
     }
 
     public async Task DeleteApprovalAsync(ApprovalRequest request, CancellationToken cancellationToken = default)

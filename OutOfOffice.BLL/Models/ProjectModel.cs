@@ -6,7 +6,7 @@ namespace OutOfOffice.BLL.Models;
 public class ProjectModel : BaseModel
 {
     public int ProjectManagerId { get; set; }
-    public ProjectManagerModel ProjectManager { get; set; } = null!;
+    public ProjectManagerModel? ProjectManager { get; set; }
     
     public int ProjectTypeId { get; set; }
     public ProjectType ProjectType { get; set; } = null!;

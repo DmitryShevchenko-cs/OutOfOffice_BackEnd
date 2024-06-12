@@ -42,8 +42,8 @@ public class ProjectController : ControllerBase
     public async Task<IActionResult> UpdateProject([FromBody]ProjectUpdateModel projectCreateModel, CancellationToken cancellationToken = default)
     {
         var userId = User.GetUserId();
-        await _projectService.UpdateProjectAsync(userId,_mapper.Map<ProjectModel>(projectCreateModel), cancellationToken);
-        return Ok();
+        var project= await _projectService.UpdateProjectAsync(userId,_mapper.Map<ProjectModel>(projectCreateModel), cancellationToken);
+        return Ok(_mapper.Map<ProjectViewModel>(project));
     }
     
     [HttpPut("deactivate/{projectId:int}")]
@@ -58,32 +58,32 @@ public class ProjectController : ControllerBase
     public async Task<IActionResult> AddEmployeesProject([FromBody]AddEmployeesModel addEmployeesModel, CancellationToken cancellationToken = default)
     {
         var userId = User.GetUserId();
-        await _projectService.AddEmployeesInProject(userId, addEmployeesModel.ProjectId, addEmployeesModel.EmployeesIds, cancellationToken);
+        await _projectService.AddEmployeesInProjectAsync(userId, addEmployeesModel.ProjectId, addEmployeesModel.EmployeesIds, cancellationToken);
         return Ok();
     }
 
     [HttpGet("project-manager")]
-    public async Task<IActionResult> GetAllByProjectManager([FromQuery] int projectManagerId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllByProjectManager(CancellationToken cancellationToken)
     {
         var userId = User.GetUserId();
         var projects = await _projectService.GetAllByProjectManagerIdAsync(userId, cancellationToken);
-        return Ok(projects);
+        return Ok(_mapper.Map<List<ProjectViewModel>>(projects));
     }
     
     [HttpGet("hr-manager")]
-    public async Task<IActionResult> GetAllByHrManager([FromQuery] int hrManagerId, CancellationToken cancellationToken)
-    {
-        var userId = User.GetUserId();
-        var projects = await _projectService.GetAllByHrManagerId(userId, cancellationToken);
-        return Ok(projects);
-    }
-    
-    [HttpGet]
     public async Task<IActionResult> GetAllByHrManager(CancellationToken cancellationToken)
     {
         var userId = User.GetUserId();
-        var projects = await _projectService.GetAll(userId, cancellationToken);
-        return Ok(projects);
+        var projects = await _projectService.GetAllByHrManagerIdAsync(userId, cancellationToken);
+        return Ok(_mapper.Map<List<ProjectViewModel>>(projects));
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetAllByAdminManager(CancellationToken cancellationToken)
+    {
+        var userId = User.GetUserId();
+        var projects = await _projectService.GetAllAsync(userId, cancellationToken);
+        return Ok(_mapper.Map<List<ProjectViewModel>>(projects));
     }
 
 }

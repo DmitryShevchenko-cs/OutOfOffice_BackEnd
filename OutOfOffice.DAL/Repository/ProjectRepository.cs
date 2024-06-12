@@ -29,9 +29,9 @@ public class ProjectRepository : IProjectRepository
 
     public async Task<Project> CreateProjectAsync(Project project, CancellationToken cancellationToken = default)
     {
-        var entireEntity = await _officeDbContext.Projects.AddAsync(project, cancellationToken);
+        var entityEntry = await _officeDbContext.Projects.AddAsync(project, cancellationToken);
         await _officeDbContext.SaveChangesAsync(cancellationToken);
-        return entireEntity.Entity;
+        return entityEntry.Entity;
     }
 
     public async Task DeleteProjectAsync(Project project, CancellationToken cancellationToken = default)

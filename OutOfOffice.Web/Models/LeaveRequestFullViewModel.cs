@@ -1,9 +1,9 @@
 namespace OutOfOffice.Web.Models;
 
-public class LeaveRequestViewModel
+public class LeaveRequestFullViewModel
 {
     public int Id { get; set; }
-    public int EmployeeId { get; set; }
+    public EmployeeViewModel Employee { get; set; } = null!;
     public AbsenceReasonViewModel AbsenceReason { get; set; } = null!;
     public ApprovalRequestViewModel ApprovalRequest { get; set; } = null!;
     public DateTime StartDate { get; set; }

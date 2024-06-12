@@ -21,7 +21,7 @@ public class ManagerService : IManagerService
         _employeeRepository = employeeRepository;
     }
 
-    public async Task<BaseManagerModel?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<BaseManagerModel> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         var managerDb = await _employeeRepository.GetByIdAsync(id, cancellationToken);
         

@@ -9,7 +9,7 @@ public interface IProjectService : IBasicService<ProjectModel>
     Task<ProjectModel> UpdateProjectAsync(int projectManagerId, ProjectModel projectModel, CancellationToken cancellationToken = default);
     Task DeleteProjectAsync(int projectId, int projectManagerId, CancellationToken cancellationToken = default);
 
-    Task AddEmployeesInProject(int projectManagerId, int projectId, ICollection<int> employeeModelsIds,
+    Task AddEmployeesInProjectAsync(int projectManagerId, int projectId, ICollection<int> employeeModelsIds,
         CancellationToken cancellationToken = default);
 
     Task DeactivateProjectAsync(int projectId, int projectManagerId, CancellationToken cancellationToken = default);
@@ -17,7 +17,7 @@ public interface IProjectService : IBasicService<ProjectModel>
     Task<List<ProjectModel>> GetAllByProjectManagerIdAsync(int managerId,
         CancellationToken cancellationToken = default);
 
-    Task<List<ProjectModel>> GetAllByHrManagerId(int managerId, CancellationToken cancellationToken = default);
-    Task<List<ProjectModel>> GetAll(int adminId, CancellationToken cancellationToken = default);
+    Task<List<ProjectModel>> GetAllByHrManagerIdAsync(int managerId, CancellationToken cancellationToken = default);
+    Task<List<ProjectModel>> GetAllAsync(int adminId, CancellationToken cancellationToken = default);
 
 }

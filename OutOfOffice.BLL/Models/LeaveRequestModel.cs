@@ -3,7 +3,7 @@ using OutOfOffice.DAL.Entity.Selections;
 
 namespace OutOfOffice.BLL.Models;
 
-public class LeaveRequestModel
+public class LeaveRequestModel : BaseModel
 {
     public int EmployeeId { get; set; }
     public EmployeeModel Employee { get; set; } = null!;

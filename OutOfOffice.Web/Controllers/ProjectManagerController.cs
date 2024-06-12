@@ -51,7 +51,7 @@ public class ProjectManagerController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetUser(CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetCurrentManager(CancellationToken cancellationToken = default)
     {
         var userId = User.GetUserId();
         var user = await _managerService.GetByIdAsync(userId, cancellationToken);
