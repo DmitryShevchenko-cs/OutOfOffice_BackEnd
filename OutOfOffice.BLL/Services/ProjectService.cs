@@ -96,20 +96,15 @@ public class ProjectService : IProjectService
         //get ProjectManager or Admin
         var managerDb = await _employeeRepository.GetAll()
             .SingleOrDefaultAsync(r => r.Id == projectManagerId && (r is ProjectManager || r is Admin), cancellationToken);
-        if (managerDb is null)
+        if (managerDb is not (ProjectManager or Admin))
             throw new ManagerNotFoundException($"Project manager or admin with Id {projectManagerId} not found");
 
-        if (managerDb is ProjectManager or Admin)
-        {
-            var projectDb = await _projectRepository.GetByIdAsync(projectId, cancellationToken);
-        
-            if (projectDb is null)
-                throw new ProjectNotFoundException($"Project with Id {projectId} not found");
+        var projectDb = await _projectRepository.GetByIdAsync(projectId, cancellationToken);
 
-            await _projectRepository.DeleteProjectAsync(projectDb, cancellationToken);
-        }
-        else
-            throw new ManagerException("Invalid manager type");
+        if (projectDb is null)
+            throw new ProjectNotFoundException($"Project with Id {projectId} not found");
+
+        await _projectRepository.DeleteProjectAsync(projectDb, cancellationToken);
     }
     
     public async Task DeactivateProjectAsync(int projectId, int projectManagerId, CancellationToken cancellationToken = default)
@@ -117,61 +112,57 @@ public class ProjectService : IProjectService
         //get ProjectManager or Admin
         var managerDb = await _employeeRepository.GetAll()
             .SingleOrDefaultAsync(r => r.Id == projectManagerId && (r is ProjectManager || r is Admin), cancellationToken);
-        if (managerDb is null)
+        if (managerDb is not (ProjectManager or Admin))
             throw new ManagerNotFoundException($"Project manager or admin with Id {projectManagerId} not found");
 
-        if (managerDb is ProjectManager or Admin)
+        var projectDb = await _projectRepository.GetByIdAsync(projectId, cancellationToken);
+
+        if (projectDb is null)
+            throw new ProjectNotFoundException($"Project with Id {projectId} not found");
+        projectDb.isDeactivated = !projectDb.isDeactivated;
+        
+        await _projectRepository.UpdateProjectAsync(projectDb, cancellationToken);
+    }
+
+    public async Task<List<ProjectModel>> GetAllAsync(int userId, CancellationToken cancellationToken = default)
+    {
+        //only for ProjectManager or Admin
+        var userDb = await _employeeRepository.GetAll()
+            .SingleOrDefaultAsync(r => r.Id == userId, cancellationToken);
+        if (userDb is null)
+            throw new ManagerNotFoundException($"Project manager or admin with Id {userId} not found");
+
+        var projectsDb = userDb switch
         {
-            var projectDb = await _projectRepository.GetByIdAsync(projectId, cancellationToken);
-        
-            if (projectDb is null)
-                throw new ProjectNotFoundException($"Project with Id {projectId} not found");
-            projectDb.isDeactivated = !projectDb.isDeactivated;
-            await _projectRepository.UpdateProjectAsync(projectDb, cancellationToken);
-        }
-        else
-            throw new ManagerException("Invalid manager type");
-    }
+            HrManager => await _employeeRepository.GetAll()
+                .Include(r => ((Employee)r).Projects)
+                .Where(r => ((Employee)r).HrMangerId == userId)
+                .SelectMany(r => ((Employee)r).Projects)
+                .ToListAsync(cancellationToken),
+            
+            ProjectManager => await _employeeRepository.GetAll()
+                .Include(r => ((Employee)r).Projects)
+                .SelectMany(r => ((Employee)r).Projects)
+                .Where(r => r.ProjectManagerId == userDb.Id)
+                .ToListAsync(cancellationToken),
+            
+            Employee => await _employeeRepository.GetAll()
+                .Include(r => ((Employee)r).Projects)
+                .Where(r => ((Employee)r).Id == userId)
+                .SelectMany(r => ((Employee)r).Projects)
+                .ToListAsync(cancellationToken),
+            
+            Admin => await _employeeRepository.GetAll()
+                .Include(r => ((Employee)r).Projects)
+                .SelectMany(r => ((Employee)r).Projects)
+                .ToListAsync(cancellationToken),
+            
+            _ => throw new EmployeeNotFoundException($"Employee with Id {userId} not found")
+        };
 
-    public async Task<List<ProjectModel>> GetAllByProjectManagerIdAsync(int managerId, CancellationToken cancellationToken = default)
-    {
-        //only for ProjectManager
-        var managerDb = await _employeeRepository.GetAll()
-            .SingleOrDefaultAsync(r => r.Id == managerId && r is ProjectManager, cancellationToken);
-        if (managerDb is null)
-            throw new ManagerNotFoundException($"Project manager or admin with Id {managerId} not found");
-
-        var projectsDb = await _projectRepository.GetAll().Where(r => r.ProjectManagerId == managerDb.Id).ToListAsync(cancellationToken);
-
-        return _mapper.Map<List<ProjectModel>>(projectsDb);
-    }
-
-    public async Task<List<ProjectModel>> GetAllByHrManagerIdAsync(int managerId, CancellationToken cancellationToken = default)
-    {
-        //only for HrManager
-        var managerDb = await _employeeRepository.GetAll()
-            .SingleOrDefaultAsync(r => r.Id == managerId && r is HrManager, cancellationToken);
-        if (managerDb is null)
-            throw new ManagerNotFoundException($"Project manager or admin with Id {managerId} not found");
-
-        var projectsDb = await _employeeRepository.GetAll().Include(r => ((Employee)r).Projects)
-            .Where(r => ((Employee)r).HrMangerId == managerId).SelectMany(r => ((Employee)r).Projects).ToListAsync(cancellationToken);
-        
         return _mapper.Map<List<ProjectModel>>(projectsDb);
     }
     
-    public async Task<List<ProjectModel>> GetAllAsync(int adminId, CancellationToken cancellationToken = default)
-    {
-        //only for HrManager
-        var managerDb = await _employeeRepository.GetAll()
-            .SingleOrDefaultAsync(r => r.Id == adminId && r is Admin, cancellationToken);
-        if (managerDb is null)
-            throw new ManagerNotFoundException($"Project manager or admin with Id {adminId} not found");
-
-        var projectsDb = await _employeeRepository.GetAll().Include(r => ((Employee)r).Projects).SelectMany(r => ((Employee)r).Projects).ToListAsync(cancellationToken);
-        return _mapper.Map<List<ProjectModel>>(projectsDb);
-    }
-
     public async Task AddEmployeesInProjectAsync(int projectManagerId, int projectId, ICollection<int> employeeModelsIds, CancellationToken cancellationToken = default)
     {
         // get employee who is not a general employee

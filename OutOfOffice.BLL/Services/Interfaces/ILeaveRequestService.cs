@@ -3,7 +3,7 @@ namespace OutOfOffice.BLL.Services.Interfaces;
 
 public interface ILeaveRequestService : IBasicService<LeaveRequestModel>
 {
-    Task<LeaveRequestModel> CreateLeaveRequestAsync(int employeeId, LeaveRequestModel leaveRequestModel,
+    Task<LeaveRequestModel> CreateLeaveRequestAsync(int employeeId, int approverId,  LeaveRequestModel leaveRequestModel,
         CancellationToken cancellationToken);
 
     Task<LeaveRequestModel> UpdateLeaveRequestAsync(int employeeId, LeaveRequestModel leaveRequestModel,
@@ -11,7 +11,7 @@ public interface ILeaveRequestService : IBasicService<LeaveRequestModel>
 
     Task DeleteLeaveRequestAsync(int employeeId, int leaveRequestId, CancellationToken cancellationToken = default);
 
-    Task<List<LeaveRequestModel>> GetAllEmployeesRequestAsync(int employeeId, CancellationToken cancellationToken = default);
+    Task<List<LeaveRequestModel>> GetAllEmployeesRequestAsync(int userId, CancellationToken cancellationToken = default);
 
     Task<LeaveRequestModel> GetById(int employeeId, int requestId, CancellationToken cancellationToken = default);
 }

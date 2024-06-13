@@ -14,10 +14,5 @@ public interface IProjectService : IBasicService<ProjectModel>
 
     Task DeactivateProjectAsync(int projectId, int projectManagerId, CancellationToken cancellationToken = default);
 
-    Task<List<ProjectModel>> GetAllByProjectManagerIdAsync(int managerId,
-        CancellationToken cancellationToken = default);
-
-    Task<List<ProjectModel>> GetAllByHrManagerIdAsync(int managerId, CancellationToken cancellationToken = default);
-    Task<List<ProjectModel>> GetAllAsync(int adminId, CancellationToken cancellationToken = default);
-
+    Task<List<ProjectModel>> GetAllAsync(int userId, CancellationToken cancellationToken = default);
 }

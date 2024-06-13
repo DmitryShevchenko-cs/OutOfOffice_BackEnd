@@ -8,6 +8,6 @@ public interface IGeneralEmployeeService : IBasicService<EmployeeModel>
     Task<EmployeeModel> CreateEmployeeAsync(int managerId, EmployeeModel employeeModel, CancellationToken cancellationToken = default);
     Task<EmployeeModel> UpdateEmployeeAsync(EmployeeModel employeeModel, CancellationToken cancellationToken = default);
     Task DeleteEmployeeAsync(int id, CancellationToken cancellationToken = default);
-    Task<List<EmployeeModel>> GetEmployeeAsync(int managerId, CancellationToken cancellationToken = default);
+    Task<List<EmployeeModel>> GetEmployeesAsync(int managerId, CancellationToken cancellationToken = default);
     
 }

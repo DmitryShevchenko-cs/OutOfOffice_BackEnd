@@ -61,25 +61,9 @@ public class ProjectController : ControllerBase
         await _projectService.AddEmployeesInProjectAsync(userId, addEmployeesModel.ProjectId, addEmployeesModel.EmployeesIds, cancellationToken);
         return Ok();
     }
-
-    [HttpGet("project-manager")]
-    public async Task<IActionResult> GetAllByProjectManager(CancellationToken cancellationToken)
-    {
-        var userId = User.GetUserId();
-        var projects = await _projectService.GetAllByProjectManagerIdAsync(userId, cancellationToken);
-        return Ok(_mapper.Map<List<ProjectViewModel>>(projects));
-    }
-    
-    [HttpGet("hr-manager")]
-    public async Task<IActionResult> GetAllByHrManager(CancellationToken cancellationToken)
-    {
-        var userId = User.GetUserId();
-        var projects = await _projectService.GetAllByHrManagerIdAsync(userId, cancellationToken);
-        return Ok(_mapper.Map<List<ProjectViewModel>>(projects));
-    }
     
     [HttpGet]
-    public async Task<IActionResult> GetAllByAdminManager(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         var userId = User.GetUserId();
         var projects = await _projectService.GetAllAsync(userId, cancellationToken);
