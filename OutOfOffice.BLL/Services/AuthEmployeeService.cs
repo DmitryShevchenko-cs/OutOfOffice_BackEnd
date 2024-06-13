@@ -5,6 +5,7 @@ using OutOfOffice.BLL.Helpers;
 using OutOfOffice.BLL.Models.Employees;
 using OutOfOffice.BLL.Services.Interfaces;
 using OutOfOffice.DAL.Entity;
+using OutOfOffice.DAL.Entity.Employees;
 using OutOfOffice.DAL.Repository.Interfaces;
 
 namespace OutOfOffice.BLL.Services;
@@ -23,7 +24,7 @@ public class AuthEmployeeService : IAuthEmployeeService
 
     public async Task<BaseEmployeeModel> GetByLoginAndPasswordAsync(string login, string password, CancellationToken cancellationToken = default)
     {
-        var employeeDb = await _employeeRepository.GetAll().FirstOrDefaultAsync(i => i.Login == login, cancellationToken);
+        var employeeDb = await _employeeRepository.GetAll().FirstOrDefaultAsync(i => i.Login == login && i.isDeactivated == false, cancellationToken);
         if (employeeDb is null)
             throw new EmployeeNotFoundException($"Employee with login {login} not found");
         
@@ -59,9 +60,10 @@ public class AuthEmployeeService : IAuthEmployeeService
         
         if (employeeDb is null)
             throw new EmployeeNotFoundException($"Employee with this Id {employeeModel.Id} not found");
-        
-        if (employeeDb!.AuthorizationInfo is not null && employeeDb.AuthorizationInfo.ExpiredDate <= DateTime.Now.AddDays(-1))
-            throw new TimeoutException();
+
+        if (employeeDb!.AuthorizationInfo is not null &&
+            employeeDb.AuthorizationInfo.ExpiredDate <= DateTime.Now.AddDays(-1))
+            await LogOutAsync(employeeDb.Id, cancellationToken);
 
         employeeDb.AuthorizationInfo = new AuthorizationInfo()
         {
@@ -84,5 +86,13 @@ public class AuthEmployeeService : IAuthEmployeeService
             await _employeeRepository.UpdateEmployeeAsync(employeeDb, cancellationToken);
         }
         else throw new NullReferenceException($"User with this token not found");
+    }
+
+    public async Task<BaseEmployeeEntity> GetUserById(int userId, CancellationToken cancellationToken = default)
+    {
+        var userDb = await _employeeRepository.GetByIdAsync(userId, cancellationToken);
+        if (userDb is null)
+            throw new EmployeeNotFoundException($"User with this Id {userId} not found");
+        return userDb;
     }
 }

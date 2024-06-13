@@ -24,7 +24,7 @@ public class MapperModelsConfig : AutoMapper.Profile
         CreateMap<BaseManagerEntity, BaseManagerModel>()
             .ReverseMap();
         
-        CreateMap<DAL.Entity.Employees.Employee, EmployeeModel>()
+        CreateMap<Employee, EmployeeModel>()
             .ReverseMap();
         
         CreateMap<HrManager, HrManagerModel>()
@@ -63,7 +63,7 @@ public class MapperModelsConfig : AutoMapper.Profile
         CreateMap<Project, ProjectModel>()
             .ReverseMap();
         
-        CreateMap<DAL.Entity.Employees.Employee, BaseEmployeeModel>()
+        CreateMap<Employee, BaseEmployeeModel>()
             .ReverseMap();
         
         CreateMap<BaseManagerModel, ManagerCreateModel>()
@@ -73,7 +73,7 @@ public class MapperModelsConfig : AutoMapper.Profile
         CreateMap<HrManagerModel, ManagerCreateModel>()
             .ReverseMap();
         
-        CreateMap<DAL.Entity.Employees.Employee, BaseEmployeeEntity>()
+        CreateMap<Employee, BaseEmployeeEntity>()
             .ReverseMap();
         
         CreateMap<BaseManagerModel, ProjectManager>()
@@ -108,7 +108,14 @@ public class MapperModelsConfig : AutoMapper.Profile
             .ReverseMap();
         CreateMap<ProjectUpdateModel, ProjectModel>()
             .ReverseMap();
-        
+
+        CreateMap<BaseEmployeeModel, CurrentUserViewModel>()
+            .ForMember(prop => prop.UserType, opt => opt.Ignore())
+            .ReverseMap();
+        CreateMap<BaseEmployeeEntity, CurrentUserViewModel>()
+            .ForMember(prop => prop.UserType, opt => opt.Ignore())
+            .ReverseMap();
+
 
     }
 }

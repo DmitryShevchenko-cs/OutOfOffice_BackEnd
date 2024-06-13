@@ -1,9 +1,14 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OutOfOffice.BLL.Exceptions;
+using OutOfOffice.BLL.Models.Employees;
 using OutOfOffice.BLL.Services.Interfaces;
+using OutOfOffice.DAL.Entity.Employees;
 using OutOfOffice.Web.Extensions;
 using OutOfOffice.Web.Helpers;
 using OutOfOffice.Web.Models;
+using OutOfOffice.Web.Models.Enums;
 
 namespace OutOfOffice.Web.Controllers;
 
@@ -14,11 +19,12 @@ public class AuthController : ControllerBase
 {
     private readonly TokenHelper _tokenHelper;
     private readonly IAuthEmployeeService _authEmployeeService;
-
-    public AuthController(TokenHelper tokenHelper, IAuthEmployeeService authEmployeeService)
+    private readonly IMapper _mapper;
+    public AuthController(TokenHelper tokenHelper, IAuthEmployeeService authEmployeeService, IMapper mapper)
     {
         _tokenHelper = tokenHelper;
         _authEmployeeService = authEmployeeService;
+        _mapper = mapper;
     }
 
     [AllowAnonymous]
@@ -49,13 +55,34 @@ public class AuthController : ControllerBase
         return Ok(new { accessKey = token, refresh_token = refreshToken, expiredDate = user.AuthorizationInfo!.ExpiredDate });
     }
     
-    [HttpPost]
-    [Route(("logout"))]
+    [HttpPost("logout")]
     public async Task<IActionResult> LogOutAsync(CancellationToken cancellationToken)
     {
-        var employeeId = User.GetUserId();
-        await _authEmployeeService.LogOutAsync(employeeId, cancellationToken);
+        var userId = User.GetUserId();
+        await _authEmployeeService.LogOutAsync(userId, cancellationToken);
         return Ok();
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetCurrentUser(CancellationToken cancellationToken)
+    {
+        var userId = User.GetUserId();
+        var userModel = await _authEmployeeService.GetUserById(userId, cancellationToken);
+        
+        var currentUser = _mapper.Map<CurrentUserViewModel>(userModel);
+        currentUser.UserType = userModel switch
+        {
+            HrManager => UserType.HrManager,
+
+            ProjectManager => UserType.ProjectManager,
+
+            Employee => UserType.Employee,
+
+            Admin => UserType.Admin,
+
+            _ => throw new EmployeeNotFoundException($"User with Id {userId} not found")
+        };
+        return Ok(currentUser);
     }
 
 }
