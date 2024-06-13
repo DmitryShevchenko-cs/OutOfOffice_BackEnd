@@ -73,7 +73,7 @@ public class GeneralEmployeeService : IGeneralEmployeeService
         await _employeeRepository.DeleteEmployeeAsync(employeeDb, cancellationToken);
     }
 
-    public async Task<List<EmployeeModel>> GetEmployeeAsync(int managerId, CancellationToken cancellationToken = default)
+    public async Task<List<EmployeeModel>> GetEmployeesAsync(int managerId, CancellationToken cancellationToken = default)
     {
         var creator = await _employeeRepository.GetAll().Where(r => r.Id == managerId && (r is HrManager || r is Admin)).SingleOrDefaultAsync(cancellationToken);
         if (creator is null)

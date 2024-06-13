@@ -26,7 +26,7 @@ public class LeaveRequestController : ControllerBase
     public async Task<IActionResult> CreateLeaveRequest([FromBody] LeaveRequestCreateModel requestModel, CancellationToken cancellationToken = default)
     {
         var userId = User.GetUserId();
-        var request = await _leaveRequestService.CreateLeaveRequestAsync(userId, _mapper.Map<LeaveRequestModel>(requestModel) , cancellationToken);
+        var request = await _leaveRequestService.CreateLeaveRequestAsync(userId, requestModel.ApproverId, _mapper.Map<LeaveRequestModel>(requestModel) , cancellationToken);
         return Ok(_mapper.Map<LeaveRequestViewModel>(request));
     }
     

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using OutOfOffice.BLL.Exceptions;
 using OutOfOffice.BLL.Helpers;
 using OutOfOffice.BLL.Models;
+using OutOfOffice.BLL.Models.Enums;
 using OutOfOffice.BLL.Services.Interfaces;
 using OutOfOffice.DAL.Entity;
 using OutOfOffice.DAL.Entity.Employees;
@@ -35,7 +36,7 @@ public class LeaveRequestService : ILeaveRequestService
         return requestModel;
     }
 
-    public async Task<LeaveRequestModel> CreateLeaveRequestAsync(int employeeId, LeaveRequestModel leaveRequestModel,
+    public async Task<LeaveRequestModel> CreateLeaveRequestAsync(int employeeId, int approverId, LeaveRequestModel leaveRequestModel,
         CancellationToken cancellationToken)
     {
         var employeeDb = await _employeeRepository.GetAll()
@@ -46,7 +47,11 @@ public class LeaveRequestService : ILeaveRequestService
         }
 
         leaveRequestModel.EmployeeId = employeeId;
-
+        leaveRequestModel.ApprovalRequest = new ApprovalRequestModel
+        {
+            ApproverId = approverId,
+            Comment = ""
+        };
         var requestDb = await _leaveRequestRepository.CreateLeaveRequestAsync(_mapper.Map<LeaveRequest>(leaveRequestModel),
                 cancellationToken);
         return _mapper.Map<LeaveRequestModel>(requestDb);
@@ -106,10 +111,10 @@ public class LeaveRequestService : ILeaveRequestService
         await _leaveRequestRepository.DeleteLeaveRequestAsync(leaveRequestDb, cancellationToken);
     }
 
-    public async Task<List<LeaveRequestModel>> GetAllEmployeesRequestAsync(int employeeId, CancellationToken cancellationToken = default)
+    public async Task<List<LeaveRequestModel>> GetAllEmployeesRequestAsync(int userId, CancellationToken cancellationToken = default)
     {
-        var leaveRequestsDb = await _leaveRequestRepository.GetAll().Include(r => r.Employee)
-            .Where(r => r.EmployeeId == employeeId).ToListAsync(cancellationToken);
+        var leaveRequestsDb = await _leaveRequestRepository.GetAll().Include(r => r.Employee).Include(r => r.ApprovalRequest).ThenInclude(i => i!.Approver)
+            .Where(r => r.EmployeeId == userId).ToListAsync(cancellationToken);
         
         return _mapper.Map<List<LeaveRequestModel>>(leaveRequestsDb);
     }

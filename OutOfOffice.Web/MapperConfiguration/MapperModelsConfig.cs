@@ -40,6 +40,12 @@ public class MapperModelsConfig : AutoMapper.Profile
         
         CreateMap<ApprovalRequest, ApprovalRequestModel>()
             .ReverseMap();  
+        CreateMap<ApprovalRequestViewModel, ApprovalRequestModel>()
+            .ReverseMap();  
+        CreateMap<ApprovalRequestCreateModel, ApprovalRequestModel>()
+            .ReverseMap();  
+        CreateMap<ApprovalRequestUpdateModel, ApprovalRequestModel>()
+            .ReverseMap();  
         CreateMap<AbsenceReasonViewModel, AbsenceReason>()
             .ReverseMap();
         
