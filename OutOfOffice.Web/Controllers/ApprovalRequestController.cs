@@ -21,15 +21,6 @@ public class ApprovalRequestController : ControllerBase
         _mapper = mapper;
         _approvalRequestService = approvalRequestService;
     }
-
-    // [HttpPost]
-    // public async Task<IActionResult> CreateApprovalRequest([FromBody] ApprovalRequestCreateModel approve, CancellationToken cancellationToken = default)
-    // {
-    //     var userId = User.GetUserId();
-    //     var approvedRequest = await _approvalRequestService.CreateApprovalRequestAsync(userId, _mapper.Map<ApprovalRequestModel>(approve),
-    //         cancellationToken);
-    //     return Ok(_mapper.Map<ApprovalRequestViewModel>(approvedRequest));
-    // }
     
     [HttpPut]
     public async Task<IActionResult> UpdateApprovalRequest([FromBody] ApprovalRequestUpdateModel approve, CancellationToken cancellationToken = default)
