@@ -1,6 +1,6 @@
 namespace OutOfOffice.Web.Models;
 
-public class EmployeeAuthorizeModel
+public class AuthorizeModel
 {
     public string Login { get; set; } = null!;
     public string Password { get; set; } = null!;

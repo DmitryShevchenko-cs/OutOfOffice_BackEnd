@@ -11,9 +11,9 @@ public class OfficeDbContext : DbContext
     {
     }
     
-    public DbSet<BaseEmployeeEntity> Employees { get; set; }
+    public DbSet<BaseEmployeeEntity> BaseEmployees { get; set; }
 
-    public DbSet<GeneralEmployee> GeneralEmployees { get; set; }
+    public DbSet<Employee> Employees { get; set; }
     public DbSet<HrManager> HrManagers { get; set; }
     public DbSet<ProjectManager> ProjectManagers { get; set; }
     
@@ -30,7 +30,7 @@ public class OfficeDbContext : DbContext
     
     public DbSet<AuthorizationInfo> AuthorizationInfos { get; set; }
     
-    public DbSet<AdminEntity> Admins { get; set; }
+    public DbSet<Admin> Admins { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

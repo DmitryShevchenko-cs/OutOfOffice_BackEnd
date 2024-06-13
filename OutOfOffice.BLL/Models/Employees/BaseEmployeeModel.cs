@@ -10,4 +10,5 @@ public class BaseEmployeeModel : BaseModel
 
     public int AuthorizationInfoId { get; set; }
     public AuthorizationInfoModel? AuthorizationInfo { get; set; } = null!;
+    public bool isDeactivated { get; set; }
 }

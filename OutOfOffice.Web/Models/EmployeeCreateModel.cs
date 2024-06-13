@@ -7,4 +7,12 @@ public class EmployeeCreateModel
     
     public string FullName { get; set; } = null!;
     public byte[]? Photo { get; set; }
+    
+    public int SubdivisionId { get; set; }
+    
+    public int PositionId { get; set; }
+    
+    public bool Status { get; set; }
+    
+    public int OutOfOfficeBalance { get; set; }
 }

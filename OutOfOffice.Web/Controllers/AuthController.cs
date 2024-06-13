@@ -23,7 +23,7 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<ActionResult> AuthorizeEmployee([FromBody] EmployeeAuthorizeModel model, CancellationToken cancellationToken)
+    public async Task<ActionResult> AuthorizeEmployee([FromBody] AuthorizeModel model, CancellationToken cancellationToken)
     {
         var employee = await _authEmployeeService.GetByLoginAndPasswordAsync(model.Login, model.Password, cancellationToken);
         var token = _tokenHelper.GetToken(employee.Id);
@@ -37,6 +37,16 @@ public class AuthController : ControllerBase
             cancellationToken);
         
         return Ok(new { accessKey = token, refresh_token = refreshToken, expiredDate = expiredDate });
+    }
+    
+    [AllowAnonymous]
+    [HttpPost("token/{refreshToken}")]
+    public async Task<IActionResult> UpdateTokenAsync([FromQuery] string refreshToken, CancellationToken cancellationToken)
+    {
+        refreshToken = refreshToken.Replace(" ", "+"); 
+        var user = await _authEmployeeService.GetUserByRefreshTokenAsync(refreshToken, cancellationToken);
+        var token = _tokenHelper.GetToken(user.Id);
+        return Ok(new { accessKey = token, refresh_token = refreshToken, expiredDate = user.AuthorizationInfo!.ExpiredDate });
     }
     
     [HttpPost]

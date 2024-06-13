@@ -250,7 +250,7 @@ namespace OutOfOffice.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("TypeName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -290,8 +290,8 @@ namespace OutOfOffice.DAL.Migrations
                     b.Property<int>("HrMangerId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("OutOfOfficeBalance")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("OutOfOfficeBalance")
+                        .HasColumnType("int");
 
                     b.Property<int>("PositionId")
                         .HasColumnType("int");

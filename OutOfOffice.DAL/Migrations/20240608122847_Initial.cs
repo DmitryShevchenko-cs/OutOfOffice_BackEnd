@@ -58,7 +58,7 @@ namespace OutOfOffice.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TypeName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -137,7 +137,7 @@ namespace OutOfOffice.DAL.Migrations
                     SubdivisionId = table.Column<int>(type: "int", nullable: false),
                     PositionId = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
-                    OutOfOfficeBalance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    OutOfOfficeBalance = table.Column<int>(type: "int", nullable: false),
                     HrMangerId = table.Column<int>(type: "int", nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Photo = table.Column<byte[]>(type: "varbinary(max)", nullable: true)

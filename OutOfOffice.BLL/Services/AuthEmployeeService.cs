@@ -55,7 +55,7 @@ public class AuthEmployeeService : IAuthEmployeeService
     public async Task AddAuthorizationValueAsync(BaseEmployeeModel employeeModel, string refreshToken, DateTime? expiredDate = null,
         CancellationToken cancellationToken = default)
     {
-        var employeeDb = await _employeeRepository.GetByIdAsync(employeeModel.Id, cancellationToken);
+        var employeeDb = await _employeeRepository.GetAll().Include(r => r.AuthorizationInfo).FirstOrDefaultAsync(r => r.Id == employeeModel.Id, cancellationToken);
         
         if (employeeDb is null)
             throw new EmployeeNotFoundException($"Employee with this Id {employeeModel.Id} not found");
@@ -73,7 +73,7 @@ public class AuthEmployeeService : IAuthEmployeeService
 
     public async Task LogOutAsync(int employeeId, CancellationToken cancellationToken = default)
     {
-        var employeeDb = await _employeeRepository.GetByIdAsync(employeeId, cancellationToken);
+        var employeeDb = await _employeeRepository.GetAll().Include(r => r.AuthorizationInfo).FirstOrDefaultAsync(r => r.Id == employeeId, cancellationToken);
         
         if (employeeDb is null)
             throw new EmployeeNotFoundException($"Employee with this Id {employeeId} not found");
