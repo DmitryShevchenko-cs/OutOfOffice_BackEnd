@@ -89,6 +89,11 @@ public class MapperModelsConfig : AutoMapper.Profile
             .ReverseMap();
         CreateMap<BaseManagerModel, ManagerViewModel>()
             .ReverseMap();
+        CreateMap<BaseManagerEntity, ManagerViewModel>()
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.GetType().Name))
+            .ReverseMap();
+
+
         
         CreateMap<HrManagerModel, ManagerViewModel>()
             .ReverseMap();
