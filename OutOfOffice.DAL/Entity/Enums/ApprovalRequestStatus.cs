@@ -1,6 +1,6 @@
 namespace OutOfOffice.DAL.Entity.Enums;
 
-public enum Status
+public enum ApprovalRequestStatus
 {
     New = default,
     Approved,

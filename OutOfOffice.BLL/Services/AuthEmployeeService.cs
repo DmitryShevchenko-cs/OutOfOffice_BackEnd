@@ -22,7 +22,7 @@ public class AuthEmployeeService : IAuthEmployeeService
         _mapper = mapper;
     }
 
-    public async Task<BaseEmployeeModel> GetByLoginAndPasswordAsync(string login, string password, CancellationToken cancellationToken = default)
+    public async Task<BaseEmployeeEntity> GetByLoginAndPasswordAsync(string login, string password, CancellationToken cancellationToken = default)
     {
         var employeeDb = await _employeeRepository.GetAll().FirstOrDefaultAsync(i => i.Login == login && i.isDeactivated == false, cancellationToken);
         if (employeeDb is null)
@@ -33,8 +33,7 @@ public class AuthEmployeeService : IAuthEmployeeService
             throw new WrongLoginOrPasswordException("Wrong login or password");
         }
         
-        var employeeModel = _mapper.Map<BaseEmployeeModel>(employeeDb);
-        return employeeModel;
+        return employeeDb;
     }
 
     public async Task<BaseEmployeeModel> GetUserByRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
@@ -88,11 +87,11 @@ public class AuthEmployeeService : IAuthEmployeeService
         else throw new NullReferenceException($"User with this token not found");
     }
 
-    public async Task<BaseEmployeeEntity> GetUserById(int userId, CancellationToken cancellationToken = default)
+    public async Task<BaseEmployeeModel> GetUserById(int userId, CancellationToken cancellationToken = default)
     {
         var userDb = await _employeeRepository.GetByIdAsync(userId, cancellationToken);
         if (userDb is null)
             throw new EmployeeNotFoundException($"User with this Id {userId} not found");
-        return userDb;
+        return _mapper.Map<BaseEmployeeModel>(userDb);
     }
 }

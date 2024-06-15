@@ -75,12 +75,29 @@ public class GeneralEmployeeService : IGeneralEmployeeService
 
     public async Task<List<EmployeeModel>> GetEmployeesAsync(int managerId, CancellationToken cancellationToken = default)
     {
-        var creator = await _employeeRepository.GetAll().Where(r => r.Id == managerId && (r is HrManager || r is Admin)).SingleOrDefaultAsync(cancellationToken);
+        var creator = await _employeeRepository.GetAll().Where(r => r.Id == managerId && !(r is Employee)).SingleOrDefaultAsync(cancellationToken);
         if (creator is null)
             throw new EmployeeNotFoundException($"Manager with Id {managerId} not found");
         
-        var employees = await _employeeRepository.GetAll().Include(r => ((DAL.Entity.Employees.Employee)r).Projects).Where(r => r is DAL.Entity.Employees.Employee).ToListAsync(cancellationToken);
-        var employeesModels = _mapper.Map<List<BaseEmployeeModel>>(employees);
-        return _mapper.Map<List<EmployeeModel>>(employeesModels);
+        var employees = creator switch
+        {
+            HrManager => await _employeeRepository.GetAllEmployees()
+                .Where(r => r.HrMangerId == managerId)
+                .ToListAsync(cancellationToken),
+            
+            ProjectManager => await _employeeRepository.GetAllEmployees()
+                .Include(r => r.Projects)
+                .Where(r => r.Projects.Any(i => i.ProjectManagerId == managerId))
+                .Distinct()
+                .ToListAsync(cancellationToken),
+            
+            Admin => await _employeeRepository.GetAllEmployees()
+                .ToListAsync(cancellationToken),
+            
+            _ => throw new EmployeeNotFoundException($"Manager with Id {managerId} not found")
+        };
+        
+        
+        return _mapper.Map<List<EmployeeModel>>(employees);
     }
 }

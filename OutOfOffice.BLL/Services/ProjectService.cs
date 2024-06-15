@@ -138,23 +138,27 @@ public class ProjectService : IProjectService
                 .Include(r => ((Employee)r).Projects)
                 .Where(r => ((Employee)r).HrMangerId == userId)
                 .SelectMany(r => ((Employee)r).Projects)
+                .Include(r => r.ProjectType)
+                .Include(r => r.ProjectManager)
                 .ToListAsync(cancellationToken),
             
-            ProjectManager => await _employeeRepository.GetAll()
-                .Include(r => ((Employee)r).Projects)
-                .SelectMany(r => ((Employee)r).Projects)
-                .Where(r => r.ProjectManagerId == userDb.Id)
-                .ToListAsync(cancellationToken),
+            ProjectManager => await _projectRepository.GetAll()
+                    .Include(r => r.ProjectType)
+                    .Include(r => r.ProjectManager)
+                    .Where(r => r.ProjectManagerId == userId)
+                    .ToListAsync(cancellationToken),
             
             Employee => await _employeeRepository.GetAll()
                 .Include(r => ((Employee)r).Projects)
                 .Where(r => ((Employee)r).Id == userId)
                 .SelectMany(r => ((Employee)r).Projects)
+                .Include(r => r.ProjectType)
+                .Include(r => r.ProjectManager)
                 .ToListAsync(cancellationToken),
             
-            Admin => await _employeeRepository.GetAll()
-                .Include(r => ((Employee)r).Projects)
-                .SelectMany(r => ((Employee)r).Projects)
+            Admin => await _projectRepository.GetAll()
+                .Include(r => r.ProjectType)
+                .Include(r => r.ProjectManager)
                 .ToListAsync(cancellationToken),
             
             _ => throw new EmployeeNotFoundException($"Employee with Id {userId} not found")

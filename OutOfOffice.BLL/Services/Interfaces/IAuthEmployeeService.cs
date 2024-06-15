@@ -5,7 +5,7 @@ namespace OutOfOffice.BLL.Services.Interfaces;
 
 public interface IAuthEmployeeService
 {
-    Task<BaseEmployeeModel> GetByLoginAndPasswordAsync(string login, string password, CancellationToken cancellationToken = default);
+    Task<BaseEmployeeEntity> GetByLoginAndPasswordAsync(string login, string password, CancellationToken cancellationToken = default);
 
     Task<BaseEmployeeModel> GetUserByRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default);
     
@@ -13,6 +13,6 @@ public interface IAuthEmployeeService
 
     Task LogOutAsync(int employeeId, CancellationToken cancellationToken = default);
 
-    Task<BaseEmployeeEntity> GetUserById(int userId, CancellationToken cancellationToken = default);
+    Task<BaseEmployeeModel> GetUserById(int userId, CancellationToken cancellationToken = default);
 
 }

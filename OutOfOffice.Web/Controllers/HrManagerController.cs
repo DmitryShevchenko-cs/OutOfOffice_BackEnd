@@ -23,12 +23,5 @@ public class HrManagerController : ControllerBase
         _mapper = mapper;
     }
 
-    //admin has to authorize
-    [HttpPost]
-    public async Task<IActionResult> CreateHrManager([FromBody] ManagerCreateModel manager, CancellationToken cancellationToken)
-    {
-        var adminId = User.GetUserId();
-        var managerResult = await _managerService.CreateProjectManagerAsync(adminId,_mapper.Map<HrManagerModel>(manager), cancellationToken);
-        return Ok(_mapper.Map<ManagerViewModel>(managerResult));
-    }
+
 }

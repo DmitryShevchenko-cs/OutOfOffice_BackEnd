@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using OutOfOffice.BLL.Exceptions;
 using OutOfOffice.BLL.Helpers;
 using OutOfOffice.BLL.Models;
-using OutOfOffice.BLL.Models.Enums;
 using OutOfOffice.BLL.Services.Interfaces;
 using OutOfOffice.DAL.Entity;
 using OutOfOffice.DAL.Entity.Employees;
@@ -43,7 +42,7 @@ public class LeaveRequestService : ILeaveRequestService
             .FirstOrDefaultAsync(r => r.Id == employeeId && r is Employee, cancellationToken);
         if (employeeDb is not Employee)
         {
-            throw new EmployeeNotFoundException($"Project with Id {employeeId} not found");
+            throw new EmployeeNotFoundException($"Employee with Id {employeeId} not found");
         }
 
         leaveRequestModel.EmployeeId = employeeId;
@@ -64,7 +63,7 @@ public class LeaveRequestService : ILeaveRequestService
             .FirstOrDefaultAsync(r => r.Id == employeeId && r is Employee, cancellationToken);
         if (employeeDb is not Employee)
         {
-            throw new EmployeeNotFoundException($"Project with Id {employeeId} not found");
+            throw new EmployeeNotFoundException($"Employee with Id {employeeId} not found");
         }
 
         var leaveRequestDb = await _leaveRequestRepository.GetAll()
@@ -100,13 +99,13 @@ public class LeaveRequestService : ILeaveRequestService
             .FirstOrDefaultAsync(r => r.Id == employeeId && r is Employee, cancellationToken);
         if (employeeDb is not Employee)
         {
-            throw new EmployeeNotFoundException($"Project with Id {employeeId} not found");
+            throw new EmployeeNotFoundException($"Employee with Id {employeeId} not found");
         }
         
         var leaveRequestDb = await _leaveRequestRepository.GetAll().Include(r => r.Employee)
             .SingleOrDefaultAsync(r => r.EmployeeId == employeeId && r.Id == leaveRequestId, cancellationToken);
         if (leaveRequestDb is null)
-            throw new LeaveRequestNotFoundException($"Project with Id {leaveRequestId} not found");
+            throw new LeaveRequestNotFoundException($"Leave request with Id {leaveRequestId} not found");
         
         await _leaveRequestRepository.DeleteLeaveRequestAsync(leaveRequestDb, cancellationToken);
     }
@@ -119,11 +118,53 @@ public class LeaveRequestService : ILeaveRequestService
         return _mapper.Map<List<LeaveRequestModel>>(leaveRequestsDb);
     }
 
-    public async Task<LeaveRequestModel> GetById(int employeeId, int requestId, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// user can get his leaveRequest by id
+    /// </summary>
+    public async Task<LeaveRequestModel> GetByRequestIdAsync(int employeeId, int requestId, CancellationToken cancellationToken = default)
     {
         var leaveRequestsDb = await _leaveRequestRepository.GetAll().Include(r => r.Employee)
             .SingleOrDefaultAsync(r => r.EmployeeId == employeeId && r.Id == requestId, cancellationToken);
         
         return _mapper.Map<LeaveRequestModel>(leaveRequestsDb);
+    }
+
+    /// <summary>
+    /// manager or admin can get all leaveRequest
+    /// </summary>
+    public async Task<List<LeaveRequestModel>> GetAllAsync(int employeeId, CancellationToken cancellationToken = default)
+    {
+        var userDb = await _employeeRepository.GetAll()
+            .FirstOrDefaultAsync(r => r.Id == employeeId, cancellationToken);
+        if (userDb is null)
+            throw new EmployeeNotFoundException($"Employee with Id {employeeId} not found");
+        
+        
+        var leaveRequestsDb = userDb switch
+        {
+            HrManager => await _leaveRequestRepository.GetAll()
+                .Where(r => r.Employee.HrMangerId == employeeId)
+                .Include(r => r.Employee)
+                .ToListAsync(cancellationToken),
+            
+            ProjectManager => await _leaveRequestRepository.GetAll()
+                .Where(r => r.Employee.Projects.Any(i => i.ProjectManagerId == employeeId))
+                .Include(r => r.Employee)
+                .ToListAsync(cancellationToken),
+            
+            Employee => await _leaveRequestRepository.GetAll()
+                .Where(r => r.EmployeeId == employeeId)
+                .Include(r => r.Employee)
+                .ToListAsync(cancellationToken),
+            
+            Admin => await _leaveRequestRepository.GetAll()
+                .Include(r => r.Employee)
+                .ToListAsync(cancellationToken),
+            
+            _ => throw new EmployeeNotFoundException($"Employee with Id {employeeId} not found")
+        };
+        
+        
+        return _mapper.Map<List<LeaveRequestModel>>(leaveRequestsDb);
     }
 }

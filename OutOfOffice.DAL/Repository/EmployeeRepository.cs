@@ -21,6 +21,19 @@ public class EmployeeRepository : IEmployeeRepository
             .Include(r => ((Employee)r).Position)
             .AsQueryable();
     }
+    public IQueryable<BaseManagerEntity> GetAllMangers()
+    {
+        return _officeDbContext.Managers.AsQueryable();
+    }
+    
+    public IQueryable<Employee> GetAllEmployees()
+    {
+        return _officeDbContext.Employees
+            .Include(r => r.Subdivision)
+            .Include(r => r.Position)
+            .Include(r => r.HrManager)
+            .AsQueryable();
+    }
 
     public async Task<BaseEmployeeEntity?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {

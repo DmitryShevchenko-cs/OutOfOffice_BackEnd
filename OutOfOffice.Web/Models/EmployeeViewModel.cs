@@ -17,7 +17,4 @@ public class EmployeeViewModel
     public int OutOfOfficeBalance { get; set; }
     
     public ManagerViewModel HrManager { get; set; } = null!;
-    
-    // public ICollection<LeaveRequestViewModel> LeaveRequests { get; set; } = null!;
-    // public ICollection<ProjectViewModel> Projects { get; set; } = null!;
 }

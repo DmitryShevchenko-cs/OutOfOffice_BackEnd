@@ -5,7 +5,7 @@ namespace OutOfOffice.DAL.Entity;
 
 public class ApprovalRequest : BaseEntity
 {
-    public Status Status { get; set; }
+    public ApprovalRequestStatus ApprovalRequestStatus { get; set; }
 
     public int ApproverId { get; set; }
     public BaseManagerEntity Approver { get; set; } = null!;

@@ -9,7 +9,7 @@ public class ProjectModel : BaseModel
     public ProjectManagerModel? ProjectManager { get; set; }
     
     public int ProjectTypeId { get; set; }
-    public ProjectType ProjectType { get; set; } = null!;
+    public SelectionModel ProjectType { get; set; } = null!;
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public string Comment { get; set; } = null!;

@@ -13,25 +13,35 @@ namespace OutOfOffice.Web.Controllers;
 [Authorize]
 [Route("api/[controller]")]
 [ApiController]
-public class ProjectManagerController : ControllerBase
+public class ManagerController : ControllerBase
 {
     private readonly IManagerService _managerService;
     private readonly IMapper _mapper;
 
-    public ProjectManagerController(IManagerService managerService, IMapper mapper)
+    public ManagerController(IManagerService managerService, IMapper mapper)
     {
         _managerService = managerService;
         _mapper = mapper;
     }
     
     //admin has to authorize
-    [HttpPost]
+    [HttpPost("project-manager")]
     public async Task<IActionResult> CreateProjectManager([FromBody] ManagerCreateModel manager, CancellationToken cancellationToken)
     {
         var adminId = User.GetUserId();
         var managerResult = await _managerService.CreateProjectManagerAsync(adminId,_mapper.Map<ProjectManagerModel>(manager), cancellationToken);
         return Ok(_mapper.Map<ManagerViewModel>(managerResult));
     }
+    
+    //admin has to authorize
+    [HttpPost("hr-manager")]
+    public async Task<IActionResult> CreateHrManager([FromBody] ManagerCreateModel manager, CancellationToken cancellationToken)
+    {
+        var adminId = User.GetUserId();
+        var managerResult = await _managerService.CreateProjectManagerAsync(adminId,_mapper.Map<HrManagerModel>(manager), cancellationToken);
+        return Ok(_mapper.Map<ManagerViewModel>(managerResult));
+    }
+    
     
     [HttpPut]
     public async Task<IActionResult> UpdateManager([FromBody] ManagerUpdateModel manager, CancellationToken cancellationToken)
@@ -49,13 +59,13 @@ public class ProjectManagerController : ControllerBase
         await _managerService.DeleteManagerAsync(adminId, managerId, cancellationToken);
         return Ok();
     }
-
+    
     [HttpGet]
-    public async Task<IActionResult> GetCurrentManager(CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetAllManagers(CancellationToken cancellationToken = default)
     {
         var userId = User.GetUserId();
-        var user = await _managerService.GetByIdAsync(userId, cancellationToken);
-        return Ok(_mapper.Map<ManagerViewModel>(user));
+        var managers = await _managerService.GetAll(userId, cancellationToken);
+        return Ok(_mapper.Map<List<ManagerViewModel>>(managers));
     }
 
 }

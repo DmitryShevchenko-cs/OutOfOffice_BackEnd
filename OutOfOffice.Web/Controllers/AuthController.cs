@@ -37,12 +37,21 @@ public class AuthController : ControllerBase
         DateTime? expiredDate = model.IsNeedToRemember ? null : DateTime.Now;
 
         await _authEmployeeService.AddAuthorizationValueAsync(
-            employee,
+            _mapper.Map<BaseEmployeeModel>(employee),
             refreshToken,
             expiredDate,
             cancellationToken);
+
+        var role =  employee switch
+        {
+            HrManager => UserType.HrManager,
+            ProjectManager => UserType.ProjectManager,
+            Employee => UserType.Employee,
+            Admin => UserType.Admin,
+            _ => throw new EmployeeNotFoundException($"User with Id {employee.Id} not found")
+        };
         
-        return Ok(new { accessKey = token, refresh_token = refreshToken, expiredDate = expiredDate });
+        return Ok(new { accessKey = token, refresh_token = refreshToken, expiredDate = expiredDate, role = role });
     }
     
     [AllowAnonymous]
@@ -70,18 +79,6 @@ public class AuthController : ControllerBase
         var userModel = await _authEmployeeService.GetUserById(userId, cancellationToken);
         
         var currentUser = _mapper.Map<CurrentUserViewModel>(userModel);
-        currentUser.UserType = userModel switch
-        {
-            HrManager => UserType.HrManager,
-
-            ProjectManager => UserType.ProjectManager,
-
-            Employee => UserType.Employee,
-
-            Admin => UserType.Admin,
-
-            _ => throw new EmployeeNotFoundException($"User with Id {userId} not found")
-        };
         return Ok(currentUser);
     }
 

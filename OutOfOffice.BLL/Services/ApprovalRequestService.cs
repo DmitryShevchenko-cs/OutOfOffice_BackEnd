@@ -37,19 +37,37 @@ public class ApprovalRequestService : IApprovalRequestService
     public async Task<List<ApprovalRequestModel>> GetApprovalRequests(int userId, CancellationToken cancellationToken = default)
     {
         var userDb = await _employeeRepository.GetAll()
-            .SingleOrDefaultAsync(r => r.Id == userId && !(r is Employee), cancellationToken);
+            .SingleOrDefaultAsync(r => r.Id == userId, cancellationToken);
         if (userDb is null)
             throw new ManagerNotFoundException($"Project manager or admin with Id {userId} not found");
-
-        List<ApprovalRequest> requests;
-        if (userDb is Admin)
+        
+        var requests = userDb switch
         {
-            requests = await _approvalRequestRepository.GetAll().ToListAsync(cancellationToken);
-        }
-        else
-        {
-            requests = await _approvalRequestRepository.GetAll().Include(r => r.Approver).Where(r=> r.ApproverId == userId).ToListAsync(cancellationToken);
-        }
+            HrManager => await _approvalRequestRepository.GetAll()
+                .Include(r => r.Approver)
+                .Include(r => r.LeaveRequest)
+                .Where(r=> r.ApproverId == userId)
+                .ToListAsync(cancellationToken),
+            
+            ProjectManager => await _approvalRequestRepository.GetAll()
+                .Include(r => r.Approver)
+                .Include(r => r.LeaveRequest)
+                .Where(r=> r.ApproverId == userId)
+                .ToListAsync(cancellationToken),
+            
+            Employee => await _approvalRequestRepository.GetAll()
+                .Include(r => r.Approver)
+                .Include(r => r.LeaveRequest)
+                .Where(r=> r.LeaveRequest.EmployeeId == userId)
+                .ToListAsync(cancellationToken),
+            
+            Admin => await _approvalRequestRepository.GetAll()
+                .Include(r => r.Approver)
+                .ToListAsync(cancellationToken),
+            
+            _ => throw new EmployeeNotFoundException($"Employee with Id {userId} not found")
+        };
+        
 
         return _mapper.Map<List<ApprovalRequestModel>>(requests);
 

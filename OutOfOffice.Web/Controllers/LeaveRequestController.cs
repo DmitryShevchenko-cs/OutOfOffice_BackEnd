@@ -31,7 +31,7 @@ public class LeaveRequestController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<IActionResult> GetLeaveRequest(CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetCurrentUserLeaveRequest(CancellationToken cancellationToken = default)
     {
         var userId = User.GetUserId();
         var request = await _leaveRequestService.GetAllEmployeesRequestAsync(userId, cancellationToken);
@@ -58,8 +58,15 @@ public class LeaveRequestController : ControllerBase
     public async Task<IActionResult> GetLeaveRequest(int requestId, CancellationToken cancellationToken = default)
     {
         var userId = User.GetUserId();
-        var request = await _leaveRequestService.GetById(userId, requestId, cancellationToken);
+        var request = await _leaveRequestService.GetByRequestIdAsync(userId, requestId, cancellationToken);
         return Ok(_mapper.Map<LeaveRequestFullViewModel>(request));
+    }
+    [HttpGet("All")]
+    public async Task<IActionResult> GetAllLeaveRequest(CancellationToken cancellationToken = default)
+    {
+        var userId = User.GetUserId();
+        var request = await _leaveRequestService.GetAllAsync(userId, cancellationToken);
+        return Ok(_mapper.Map<List<LeaveRequestFullViewModel>>(request));
     }
     
 }

@@ -17,7 +17,7 @@ public class LeaveRequestRepository : ILeaveRequestRepository
     {
         return _officeDbContext.LeaveRequests
             .Include(r => r.AbsenceReason)
-            .Include(r => r.ApprovalRequest)
+            .Include(r => r.ApprovalRequest).ThenInclude(r => r!.Approver)
             .AsQueryable();
     }
 

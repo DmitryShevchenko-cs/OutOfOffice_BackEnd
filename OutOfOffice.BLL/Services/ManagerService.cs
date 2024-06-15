@@ -115,4 +115,15 @@ public class ManagerService : IManagerService
 
         await _employeeRepository.DeleteEmployeeAsync(managerDb, cancellationToken);
     }
+
+    public async Task<List<BaseManagerModel>> GetAll(int adminId, CancellationToken cancellationToken = default)
+    {
+        var adminDb = await _employeeRepository.GetByIdAsync(adminId, cancellationToken);
+        if (adminDb is not Admin)
+            throw new ManagerException("Invalid manager type");
+        
+        var managersDb = await _employeeRepository.GetAllMangers().ToListAsync(cancellationToken);
+        return _mapper.Map<List<BaseManagerModel>>(managersDb);
+    }
+    
 }

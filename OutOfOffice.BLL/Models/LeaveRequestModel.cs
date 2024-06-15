@@ -1,4 +1,5 @@
 using OutOfOffice.BLL.Models.Employees;
+using OutOfOffice.DAL.Entity.Enums;
 using OutOfOffice.DAL.Entity.Selections;
 
 namespace OutOfOffice.BLL.Models;
@@ -16,6 +17,8 @@ public class LeaveRequestModel : BaseModel
     
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
+    
+    public LeaveRequestStatus Status { get; set; }
     
     public string Comment { get; set; } = null!;
 }

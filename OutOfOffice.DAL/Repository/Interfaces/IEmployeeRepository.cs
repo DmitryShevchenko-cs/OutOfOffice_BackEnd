@@ -10,4 +10,8 @@ public interface IEmployeeRepository : IBasicRepository<BaseEmployeeEntity>
 
     Task UpdateEmployeeAsync(List<BaseEmployeeEntity> employee,
         CancellationToken cancellationToken = default);
+
+    IQueryable<Employee> GetAllEmployees();
+    IQueryable<BaseManagerEntity> GetAllMangers();
+
 }

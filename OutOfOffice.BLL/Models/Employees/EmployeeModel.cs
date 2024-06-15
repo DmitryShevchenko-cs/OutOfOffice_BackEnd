@@ -5,10 +5,10 @@ namespace OutOfOffice.BLL.Models.Employees;
 public class EmployeeModel : BaseEmployeeModel
 {
     public int? SubdivisionId { get; set; }
-    public Subdivision Subdivision { get; set; }= null!;
+    public SelectionModel Subdivision { get; set; }= null!;
     
     public int? PositionId { get; set; }
-    public Position Position { get; set; }= null!;
+    public SelectionModel Position { get; set; }= null!;
     
     public bool Status { get; set; }
     public int OutOfOfficeBalance { get; set; }

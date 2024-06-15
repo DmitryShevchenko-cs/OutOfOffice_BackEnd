@@ -1,10 +1,10 @@
-using OutOfOffice.BLL.Models.Enums;
+using OutOfOffice.DAL.Entity.Enums;
 
 namespace OutOfOffice.Web.Models;
 
 public class ApprovalRequestUpdateModel
 {
     public int Id { get; set; }
-    public Status Status { get; set; }
+    public ApprovalRequestStatus ApprovalRequestStatus { get; set; }
     public string Comment { get; set; } = null!;
 }
