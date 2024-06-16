@@ -8,6 +8,5 @@ public class ApprovalRequestViewModel
     public ApprovalRequestStatus ApprovalRequestStatus { get; set; }
     public ManagerViewModel Approver { get; set; } = null!;
     public LeaveRequestViewModel LeaveRequest { get; set; } = null!;
-    public ApprovalRequestStatus Status { get; set; }
     public string Comment { get; set; } = null!;
 }

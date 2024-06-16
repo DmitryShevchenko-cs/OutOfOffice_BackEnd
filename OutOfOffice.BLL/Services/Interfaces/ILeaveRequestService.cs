@@ -11,8 +11,6 @@ public interface ILeaveRequestService : IBasicService<LeaveRequestModel>
 
     Task DeleteLeaveRequestAsync(int employeeId, int leaveRequestId, CancellationToken cancellationToken = default);
 
-    Task<List<LeaveRequestModel>> GetAllEmployeesRequestAsync(int userId, CancellationToken cancellationToken = default);
-
     Task<LeaveRequestModel> GetByRequestIdAsync(int employeeId, int requestId, CancellationToken cancellationToken = default);
     Task<List<LeaveRequestModel>> GetAllAsync(int employeeId, CancellationToken cancellationToken = default);
 }

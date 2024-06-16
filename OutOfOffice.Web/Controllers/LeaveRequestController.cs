@@ -30,14 +30,6 @@ public class LeaveRequestController : ControllerBase
         return Ok(_mapper.Map<LeaveRequestViewModel>(request));
     }
     
-    [HttpGet]
-    public async Task<IActionResult> GetCurrentUserLeaveRequest(CancellationToken cancellationToken = default)
-    {
-        var userId = User.GetUserId();
-        var request = await _leaveRequestService.GetAllEmployeesRequestAsync(userId, cancellationToken);
-        return Ok(_mapper.Map<List<LeaveRequestViewModel>>(request));
-    }
-    
     [HttpDelete("{requestId:int}")]
     public async Task<IActionResult> DeleteLeaveRequest(int requestId, CancellationToken cancellationToken = default)
     {
@@ -61,7 +53,7 @@ public class LeaveRequestController : ControllerBase
         var request = await _leaveRequestService.GetByRequestIdAsync(userId, requestId, cancellationToken);
         return Ok(_mapper.Map<LeaveRequestFullViewModel>(request));
     }
-    [HttpGet("All")]
+    [HttpGet]
     public async Task<IActionResult> GetAllLeaveRequest(CancellationToken cancellationToken = default)
     {
         var userId = User.GetUserId();
