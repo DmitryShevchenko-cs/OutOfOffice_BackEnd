@@ -110,13 +110,10 @@ public class LeaveRequestService : ILeaveRequestService
         await _leaveRequestRepository.DeleteLeaveRequestAsync(leaveRequestDb, cancellationToken);
     }
     
-    /// <summary>
-    /// user can get his leaveRequest by id
-    /// </summary>
     public async Task<LeaveRequestModel> GetByRequestIdAsync(int employeeId, int requestId, CancellationToken cancellationToken = default)
     {
         var leaveRequestsDb = await _leaveRequestRepository.GetAll().Include(r => r.Employee)
-            .SingleOrDefaultAsync(r => r.EmployeeId == employeeId && r.Id == requestId, cancellationToken);
+            .SingleOrDefaultAsync(r => r.Id == requestId, cancellationToken);
         
         return _mapper.Map<LeaveRequestModel>(leaveRequestsDb);
     }
