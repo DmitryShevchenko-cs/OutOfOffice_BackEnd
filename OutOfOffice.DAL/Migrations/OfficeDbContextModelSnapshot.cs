@@ -147,9 +147,6 @@ namespace OutOfOffice.DAL.Migrations
                     b.Property<int>("AbsenceReasonId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ApprovalRequestId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Comment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -190,7 +187,7 @@ namespace OutOfOffice.DAL.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ProjectManagerId")
+                    b.Property<int?>("ProjectManagerId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProjectTypeId")
@@ -200,9 +197,6 @@ namespace OutOfOffice.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("isDeactivated")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -358,7 +352,7 @@ namespace OutOfOffice.DAL.Migrations
             modelBuilder.Entity("OutOfOffice.DAL.Entity.ApprovalRequest", b =>
                 {
                     b.HasOne("OutOfOffice.DAL.Entity.Employees.BaseManagerEntity", "Approver")
-                        .WithMany("ApprovalRequest")
+                        .WithMany("ApprovalRequests")
                         .HasForeignKey("ApproverId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -409,8 +403,7 @@ namespace OutOfOffice.DAL.Migrations
                     b.HasOne("OutOfOffice.DAL.Entity.Employees.ProjectManager", "ProjectManager")
                         .WithMany("Projects")
                         .HasForeignKey("ProjectManagerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("OutOfOffice.DAL.Entity.Selections.ProjectType", "ProjectType")
                         .WithMany("Projects")
@@ -482,7 +475,7 @@ namespace OutOfOffice.DAL.Migrations
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.BaseManagerEntity", b =>
                 {
-                    b.Navigation("ApprovalRequest");
+                    b.Navigation("ApprovalRequests");
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.Employee", b =>

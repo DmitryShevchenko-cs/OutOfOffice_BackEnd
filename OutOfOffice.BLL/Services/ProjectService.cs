@@ -129,7 +129,7 @@ public class ProjectService : IProjectService
 
         if (projectDb is null)
             throw new ProjectNotFoundException($"Project with Id {projectId} not found");
-        projectDb.isDeactivated = !projectDb.isDeactivated;
+        projectDb.Status = false;
 
         await _projectRepository.UpdateProjectAsync(projectDb, cancellationToken);
     }
@@ -170,7 +170,7 @@ public class ProjectService : IProjectService
             _ => throw new EmployeeNotFoundException($"Employee with Id {userId} not found")
         };
 
-        return _mapper.Map<List<ProjectModel>>(projectsDb);
+        return _mapper.Map<List<ProjectModel>>(projectsDb.OrderBy(r=>r.Status));
     }
 
     public async Task AddEmployeesInProjectAsync(int projectManagerId, int projectId,

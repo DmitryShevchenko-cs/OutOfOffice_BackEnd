@@ -8,6 +8,8 @@ public class LeaveRequestConfiguration : IEntityTypeConfiguration<LeaveRequest>
 {
     public void Configure(EntityTypeBuilder<LeaveRequest> builder)
     {
+        builder.HasKey(lr => lr.Id);
+        
         builder.HasOne(i => i.Employee)
             .WithMany(i => i.LeaveRequests)
             .OnDelete(DeleteBehavior.Restrict);
@@ -16,9 +18,8 @@ public class LeaveRequestConfiguration : IEntityTypeConfiguration<LeaveRequest>
             .WithMany(i => i.LeaveRequests)
             .OnDelete(DeleteBehavior.Restrict);
         
-        builder.HasOne(i => i.ApprovalRequest)
-            .WithOne(i => i.LeaveRequest)
-            .HasForeignKey<ApprovalRequest>(a => a.LeaveRequestId)
+        builder.HasOne(lr => lr.ApprovalRequest)
+            .WithOne(ar => ar.LeaveRequest)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

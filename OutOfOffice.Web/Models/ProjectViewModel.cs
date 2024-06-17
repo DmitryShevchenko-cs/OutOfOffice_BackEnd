@@ -9,5 +9,6 @@ public class ProjectViewModel
     public DateTime EndDate { get; set; }
     public string Comment { get; set; } = null!;
     public bool Status { get; set; }
-    
+    public List<EmployeeViewModel> Employees { get; set; } = null!;
+
 }

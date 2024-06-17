@@ -6,6 +6,7 @@ using OutOfOffice.BLL.Models;
 using OutOfOffice.BLL.Services.Interfaces;
 using OutOfOffice.DAL.Entity;
 using OutOfOffice.DAL.Entity.Employees;
+using OutOfOffice.DAL.Entity.Enums;
 using OutOfOffice.DAL.Repository.Interfaces;
 
 namespace OutOfOffice.BLL.Services;
@@ -22,6 +23,7 @@ public class LeaveRequestService : ILeaveRequestService
         _leaveRequestRepository = leaveRequestRepository;
         _mapper = mapper;
         _employeeRepository = employeeRepository;
+
     }
 
     public async Task<LeaveRequestModel> GetByIdAsync(int id, CancellationToken cancellationToken = default)
@@ -44,14 +46,21 @@ public class LeaveRequestService : ILeaveRequestService
         {
             throw new EmployeeNotFoundException($"Employee with Id {employeeId} not found");
         }
-
-        leaveRequestModel.EmployeeId = employeeId;
-        leaveRequestModel.ApprovalRequest = new ApprovalRequestModel
-        {
-            ApproverId = approverId,
-            Comment = ""
-        };
-        var requestDb = await _leaveRequestRepository.CreateLeaveRequestAsync(_mapper.Map<LeaveRequest>(leaveRequestModel),
+        
+        var requestDb = await _leaveRequestRepository.CreateLeaveRequestAsync(new LeaveRequest
+            {
+                EmployeeId = employeeId,
+                AbsenceReasonId = leaveRequestModel.AbsenceReasonId,
+                ApprovalRequest = new ApprovalRequest
+                {
+                    ApproverId = approverId,
+                    Comment = ""
+                },
+                StartDate = leaveRequestModel.StartDate,
+                EndDate = leaveRequestModel.EndDate,
+                Status = LeaveRequestStatus.Submitted,
+                Comment = leaveRequestModel.Comment
+            },
                 cancellationToken);
         return _mapper.Map<LeaveRequestModel>(requestDb);
     }

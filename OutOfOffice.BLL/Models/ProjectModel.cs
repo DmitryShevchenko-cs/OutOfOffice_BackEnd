@@ -13,8 +13,7 @@ public class ProjectModel : BaseModel
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public string Comment { get; set; } = null!;
-    public bool Status { get; set; }
     
     public ICollection<EmployeeModel> Employees { get; set; } = null!;
-    public bool isDeactivated { get; set; }
+    public bool Status { get; set; }
 }

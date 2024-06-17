@@ -24,7 +24,7 @@ public class ApprovalRequestRepository : IApprovalRequestRepository
         return await _officeDbContext.ApprovalRequests.Include(r => r.LeaveRequest).ThenInclude(r => r.Employee).SingleOrDefaultAsync(r => r.Id == id, cancellationToken);
     }
 
-    public async Task<ApprovalRequest> ApproveRequestAsync(ApprovalRequest request, CancellationToken cancellationToken = default)
+    public async Task<ApprovalRequest> CreateApprovalRequestAsync(ApprovalRequest request, CancellationToken cancellationToken = default)
     {
         var entityEntry = await _officeDbContext.ApprovalRequests.AddAsync(request, cancellationToken);
         await _officeDbContext.SaveChangesAsync(cancellationToken);

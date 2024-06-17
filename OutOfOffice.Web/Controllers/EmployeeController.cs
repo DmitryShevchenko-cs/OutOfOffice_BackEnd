@@ -40,5 +40,13 @@ public class EmployeeController : ControllerBase
         return Ok(_mapper.Map<List<EmployeeViewModel>>(employees));
     }
     
+    [HttpPut("{employeeId:int}")]
+    public async Task<IActionResult> DeactivateEmployee(int employeeId, CancellationToken cancellationToken = default)
+    {
+        var managerId = User.GetUserId();
+        await _employeeService.DeactivateEmployeeAsync(employeeId, cancellationToken);
+        return Ok();
+    }
+    
     
 }

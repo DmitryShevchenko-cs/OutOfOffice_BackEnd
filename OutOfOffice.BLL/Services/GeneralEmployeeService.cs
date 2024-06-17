@@ -72,6 +72,15 @@ public class GeneralEmployeeService : IGeneralEmployeeService
 
         await _employeeRepository.DeleteEmployeeAsync(employeeDb, cancellationToken);
     }
+    
+    public async Task DeactivateEmployeeAsync(int employeeId, CancellationToken cancellationToken = default)
+    {
+        var employeeDb = await _employeeRepository.GetAllEmployees().SingleOrDefaultAsync(r => r.Id == employeeId, cancellationToken);
+        if (employeeDb is null)
+            throw new EmployeeNotFoundException($"Employee with Id {employeeId} not found");
+        employeeDb.Status = false;
+        await _employeeRepository.UpdateEmployeeAsync(employeeDb, cancellationToken);
+    }
 
     public async Task<List<EmployeeModel>> GetEmployeesAsync(int managerId, CancellationToken cancellationToken = default)
     {
@@ -98,6 +107,6 @@ public class GeneralEmployeeService : IGeneralEmployeeService
         };
         
         
-        return _mapper.Map<List<EmployeeModel>>(employees);
+        return _mapper.Map<List<EmployeeModel>>(employees.OrderBy(r=>r.Status));
     }
 }

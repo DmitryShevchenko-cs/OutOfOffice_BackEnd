@@ -5,7 +5,7 @@ namespace OutOfOffice.DAL.Entity;
 
 public class Project : BaseEntity
 {
-    public int ProjectManagerId { get; set; }
+    public int? ProjectManagerId { get; set; }
     public ProjectManager? ProjectManager { get; set; } = null!;
     
     public int ProjectTypeId { get; set; }
@@ -13,10 +13,9 @@ public class Project : BaseEntity
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public string Comment { get; set; } = null!;
-    public bool Status { get; set; }
     
     public ICollection<Employee> Employees { get; set; } = null!;
     
-    public bool isDeactivated { get; set; }
+    public bool Status { get; set; }
     
 }
