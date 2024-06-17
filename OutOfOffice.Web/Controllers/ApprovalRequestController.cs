@@ -44,8 +44,7 @@ public class ApprovalRequestController : ControllerBase
     public async Task<IActionResult> GetApprovalRequest(CancellationToken cancellationToken = default)
     {
         var userId = User.GetUserId();
-        var approvedRequest = await _approvalRequestService.GetApprovalRequests(userId, cancellationToken);
+        var approvedRequest = await _approvalRequestService.GetApprovalRequestsAsync(userId, cancellationToken);
         return Ok(_mapper.Map<List<ApprovalRequestViewModel>>(approvedRequest));
     }
-    
 }

@@ -96,14 +96,18 @@ public class LeaveRequestService : ILeaveRequestService
     public async Task DeleteLeaveRequestAsync(int employeeId, int leaveRequestId, CancellationToken cancellationToken = default)
     {
         var employeeDb = await _employeeRepository.GetAll()
-            .FirstOrDefaultAsync(r => r.Id == employeeId && r is Employee, cancellationToken);
-        if (employeeDb is not Employee)
+            .FirstOrDefaultAsync(r => r.Id == employeeId && (r is Employee || r is Admin), cancellationToken);
+        if (employeeDb is not (Employee or Admin))
         {
             throw new EmployeeNotFoundException($"Employee with Id {employeeId} not found");
         }
+
+        LeaveRequest? leaveRequestDb;
+        if(employeeDb is Employee)
+            leaveRequestDb = await _leaveRequestRepository.GetAll().Include(r => r.Employee).SingleOrDefaultAsync(r => r.EmployeeId == employeeId && r.Id == leaveRequestId, cancellationToken);
+        else
+            leaveRequestDb = await _leaveRequestRepository.GetAll().Include(r => r.Employee).SingleOrDefaultAsync(r =>  r.Id == leaveRequestId, cancellationToken);
         
-        var leaveRequestDb = await _leaveRequestRepository.GetAll().Include(r => r.Employee)
-            .SingleOrDefaultAsync(r => r.EmployeeId == employeeId && r.Id == leaveRequestId, cancellationToken);
         if (leaveRequestDb is null)
             throw new LeaveRequestNotFoundException($"Leave request with Id {leaveRequestId} not found");
         

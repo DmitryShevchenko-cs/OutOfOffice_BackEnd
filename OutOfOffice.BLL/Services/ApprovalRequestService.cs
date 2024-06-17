@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using OutOfOffice.BLL.Exceptions;
 using OutOfOffice.BLL.Models;
+using OutOfOffice.BLL.Models.Employees;
 using OutOfOffice.BLL.Services.Interfaces;
 using OutOfOffice.DAL.Entity.Employees;
 using OutOfOffice.DAL.Entity.Enums;
@@ -34,7 +35,7 @@ public class ApprovalRequestService : IApprovalRequestService
         return approvalRequestModel;
     }
 
-    public async Task<List<ApprovalRequestModel>> GetApprovalRequests(int userId,
+    public async Task<List<ApprovalRequestModel>> GetApprovalRequestsAsync(int userId,
         CancellationToken cancellationToken = default)
     {
         var userDb = await _employeeRepository.GetAll()
@@ -73,7 +74,7 @@ public class ApprovalRequestService : IApprovalRequestService
         return _mapper.Map<List<ApprovalRequestModel>>(requests);
 
     }
-
+    
     public async Task<ApprovalRequestModel> ApproveLeaveRequestAsync(int managerId, int requestId, string comment,
         CancellationToken cancellationToken = default)
     {

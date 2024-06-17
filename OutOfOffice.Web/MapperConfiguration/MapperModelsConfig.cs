@@ -88,6 +88,7 @@ public class MapperModelsConfig : AutoMapper.Profile
         CreateMap<BaseManagerModel, ManagerUpdateModel>()
             .ReverseMap();
         CreateMap<BaseManagerModel, ManagerViewModel>()
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.GetType().Name))
             .ReverseMap();
         CreateMap<BaseManagerEntity, ManagerViewModel>()
             .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.GetType().Name))

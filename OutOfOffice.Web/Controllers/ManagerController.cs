@@ -67,5 +67,13 @@ public class ManagerController : ControllerBase
         var managers = await _managerService.GetAll(userId, cancellationToken);
         return Ok(_mapper.Map<List<ManagerViewModel>>(managers));
     }
+    
+    [HttpGet("approvers")]
+    public async Task<IActionResult> GetApprovers(CancellationToken cancellationToken = default)
+    {
+        var userId = User.GetUserId();
+        var approvedRequest = await _managerService.GetApproversAsync(userId, cancellationToken);
+        return Ok(_mapper.Map<List<ManagerViewModel>>(approvedRequest));
+    }
 
 }

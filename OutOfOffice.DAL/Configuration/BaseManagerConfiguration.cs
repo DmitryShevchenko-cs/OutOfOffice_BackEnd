@@ -9,7 +9,7 @@ public class BaseManagerConfiguration : IEntityTypeConfiguration<BaseManagerEnti
 {
     public void Configure(EntityTypeBuilder<BaseManagerEntity> builder)
     {
-        builder.HasMany(i => i.ApprovalRequest)
+        builder.HasMany(i => i.ApprovalRequests)
             .WithOne(i => i.Approver)
             .OnDelete(DeleteBehavior.Restrict);
         

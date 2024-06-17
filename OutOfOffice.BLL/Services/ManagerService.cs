@@ -122,8 +122,31 @@ public class ManagerService : IManagerService
         if (adminDb is not Admin)
             throw new ManagerException("Invalid manager type");
         
-        var managersDb = await _employeeRepository.GetAllMangers().ToListAsync(cancellationToken);
+        var managersDb = await _employeeRepository.GetAllManagers().ToListAsync(cancellationToken);
         return _mapper.Map<List<BaseManagerEntity>>(managersDb);
     }
-    
+
+    public async Task<List<BaseManagerEntity>> GetApproversAsync(int userId, CancellationToken cancellationToken = default)
+    {
+        var userDb = await _employeeRepository.GetAll()
+            .SingleOrDefaultAsync(r => (r is Employee) && r.Id == userId, cancellationToken);
+        if (userDb is null)
+            throw new ManagerNotFoundException($"Project manager or admin with Id {userId} not found");
+
+
+        var hrManagersTask = await _employeeRepository.GetAllManagers()
+            .OfType<HrManager>()
+            .Where(r => r.Partners.Any(i => i.Id == userId))
+            .ToListAsync(cancellationToken);
+
+        var projectManagersTask = await _employeeRepository.GetAllManagers()
+            .OfType<ProjectManager>()
+            .Where(r => r.Projects.Any(j => j.Employees.Any(d => d.Id == userId)))
+            .ToListAsync(cancellationToken);
+        
+        var approvers = hrManagersTask.Concat<BaseManagerEntity>(projectManagersTask).ToList();
+
+        return approvers;
+
+    }
 }

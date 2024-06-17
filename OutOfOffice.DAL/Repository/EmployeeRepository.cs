@@ -21,9 +21,9 @@ public class EmployeeRepository : IEmployeeRepository
             .Include(r => ((Employee)r).Position)
             .AsQueryable();
     }
-    public IQueryable<BaseManagerEntity> GetAllMangers()
+    public IQueryable<BaseManagerEntity> GetAllManagers()
     {
-        return _officeDbContext.Managers.AsQueryable();
+        return _officeDbContext.Managers.Include(r => r.ApprovalRequests).AsQueryable();
     }
     
     public IQueryable<Employee> GetAllEmployees()
