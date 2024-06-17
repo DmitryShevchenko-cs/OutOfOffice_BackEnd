@@ -104,7 +104,7 @@ public class ApprovalRequestService : IApprovalRequestService
         requestDb.Comment = comment;
 
         await _employeeRepository.UpdateEmployeeAsync(employee, cancellationToken);
-        await _approvalRequestRepository.UpdateApprovalAsync(requestDb, cancellationToken);
+        await _approvalRequestRepository.UpdateApproveAsync(requestDb, cancellationToken);
 
         return _mapper.Map<ApprovalRequestModel>(requestDb);
     }
@@ -129,7 +129,7 @@ public class ApprovalRequestService : IApprovalRequestService
         
         requestDb.ApprovalRequestStatus = ApprovalRequestStatus.Decline;
         requestDb.Comment = comment;
-        await _approvalRequestRepository.UpdateApprovalAsync(requestDb, cancellationToken);
+        await _approvalRequestRepository.UpdateApproveAsync(requestDb, cancellationToken);
         return _mapper.Map<ApprovalRequestModel>(requestDb);
     }
 }

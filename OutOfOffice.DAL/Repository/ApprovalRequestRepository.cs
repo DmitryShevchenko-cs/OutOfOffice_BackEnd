@@ -31,13 +31,13 @@ public class ApprovalRequestRepository : IApprovalRequestRepository
         return entityEntry.Entity;
     }
 
-    public async Task DeleteApprovalAsync(ApprovalRequest request, CancellationToken cancellationToken = default)
+    public async Task DeleteApproveAsync(ApprovalRequest request, CancellationToken cancellationToken = default)
     {
         _officeDbContext.ApprovalRequests.Remove(request);
         await _officeDbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task UpdateApprovalAsync(ApprovalRequest request, CancellationToken cancellationToken = default)
+    public async Task UpdateApproveAsync(ApprovalRequest request, CancellationToken cancellationToken = default)
     {
         _officeDbContext.ApprovalRequests.Update(request);
         await _officeDbContext.SaveChangesAsync(cancellationToken);

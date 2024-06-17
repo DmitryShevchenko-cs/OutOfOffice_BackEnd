@@ -41,6 +41,7 @@ public class Startup
         services.AddScoped<IApprovalRequestRepository, ApprovalRequestRepository>();
         services.AddScoped<ILeaveRequestRepository, LeaveRequestRepository>();
         services.AddScoped<IProjectRepository, ProjectRepository>();
+        services.AddScoped<IAbsenceReasonRepository, AbsenceReasonRepository>();
         
         // DI Services
         services.AddScoped<IGeneralEmployeeService, GeneralEmployeeService>();
@@ -50,6 +51,7 @@ public class Startup
         services.AddScoped<IProjectService, ProjectService>();
         services.AddScoped<IAuthEmployeeService, AuthEmployeeService>();
         services.AddScoped<IAdminService, AdminService>();
+        services.AddScoped<IAbsenceReasonService, AbsenceReasonService>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
