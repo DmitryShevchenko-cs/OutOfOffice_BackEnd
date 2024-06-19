@@ -34,9 +34,8 @@ public class ManagerService : IManagerService
 
     public async Task<BaseManagerModel> CreateProjectManagerAsync(int adminId, BaseManagerModel managerModel, CancellationToken cancellationToken = default)
     {
-
-        var adminDb = await _employeeRepository.GetByIdAsync(adminId, cancellationToken);
-        if (adminDb is not Admin)
+        var user = await _employeeRepository.GetAllManagers().SingleOrDefaultAsync(r => r.Id == adminId && !(r is ProjectManager), cancellationToken);
+        if (user is null)
             throw new ManagerException("Invalid manager type");
         
         var managerDb = await _employeeRepository.GetAll().FirstOrDefaultAsync(i => i.Login == managerModel.Login, cancellationToken);
@@ -71,9 +70,9 @@ public class ManagerService : IManagerService
     /// <param name="managerId">person who want to update (admin or himself manager)</param>
     public async Task<BaseManagerModel> UpdateManagerAsync(int managerId, BaseManagerModel managerModel, CancellationToken cancellationToken = default)
     {
-        var updater = await _employeeRepository.GetAll().Where(r => r.Id == managerId && (r is BaseManagerEntity || r is Admin)).SingleOrDefaultAsync(cancellationToken);
+        var updater = await _employeeRepository.GetAllManagers().SingleOrDefaultAsync(r => r.Id == managerId && !(r is ProjectManager), cancellationToken);
         if (updater is null)
-            throw new EmployeeNotFoundException($"Employee with Id {managerId} not found");
+            throw new ManagerException("Invalid manager type");
 
         if (updater is Admin || (updater is BaseManagerEntity && updater.Id == managerModel.Id))
         {
@@ -103,10 +102,13 @@ public class ManagerService : IManagerService
         throw new ManagerException("Invalid manager type");
     }
 
-    public async Task DeleteManagerAsync(int adminId, int managerId, CancellationToken cancellationToken = default)
+    public async Task DeleteManagerAsync(int userId, int managerId, CancellationToken cancellationToken = default)
     {
-        var adminDb = await _employeeRepository.GetByIdAsync(adminId, cancellationToken);
-        if (adminDb is not Admin)
+        if (userId == managerId)
+            throw new Exception("You can't delete yourself");
+            
+        var user = await _employeeRepository.GetAllManagers().SingleOrDefaultAsync(r => r.Id == userId && !(r is ProjectManager), cancellationToken);
+        if (user is null)
             throw new ManagerException("Invalid manager type");
         
         var managerDb = await _employeeRepository.GetByIdAsync(managerId, cancellationToken);
@@ -118,8 +120,8 @@ public class ManagerService : IManagerService
 
     public async Task<List<BaseManagerEntity>> GetAll(int adminId, CancellationToken cancellationToken = default)
     {
-        var adminDb = await _employeeRepository.GetByIdAsync(adminId, cancellationToken);
-        if (adminDb is not Admin)
+        var user = await _employeeRepository.GetAllManagers().SingleOrDefaultAsync(r => r.Id == adminId, cancellationToken);
+        if (user is null)
             throw new ManagerException("Invalid manager type");
         
         var managersDb = await _employeeRepository.GetAllManagers().ToListAsync(cancellationToken);
@@ -128,8 +130,8 @@ public class ManagerService : IManagerService
 
     public async Task<List<HrManagerModel>> GetHrManagers(int adminId, CancellationToken cancellationToken = default)
     {
-        var adminDb = await _employeeRepository.GetByIdAsync(adminId, cancellationToken);
-        if (adminDb is not Admin)
+        var user = await _employeeRepository.GetAllManagers().SingleOrDefaultAsync(r => r.Id == adminId, cancellationToken);
+        if (user is null)
             throw new ManagerException("Invalid manager type");
         
         var managersDb = await _employeeRepository.GetAllHrManagers().ToListAsync(cancellationToken);
@@ -138,8 +140,8 @@ public class ManagerService : IManagerService
 
     public async Task<List<ProjectManagerModel>> GetProjectManagers(int adminId, CancellationToken cancellationToken = default)
     {
-        var adminDb = await _employeeRepository.GetByIdAsync(adminId, cancellationToken);
-        if (adminDb is not Admin)
+        var user = await _employeeRepository.GetAllManagers().SingleOrDefaultAsync(r => r.Id == adminId, cancellationToken);
+        if (user is null)
             throw new ManagerException("Invalid manager type");
         
         var managersDb = await _employeeRepository.GetAllProjectManagers().ToListAsync(cancellationToken);
@@ -148,8 +150,8 @@ public class ManagerService : IManagerService
 
     public async Task<List<BaseManagerEntity>> GetApproversAsync(int userId, CancellationToken cancellationToken = default)
     {
-        var userDb = await _employeeRepository.GetAll()
-            .SingleOrDefaultAsync(r => (r is Employee) && r.Id == userId, cancellationToken);
+        var userDb = await _employeeRepository.GetAllEmployees()
+            .SingleOrDefaultAsync(r => r.Id == userId, cancellationToken);
         if (userDb is null)
             throw new ManagerNotFoundException($"Project manager or admin with Id {userId} not found");
 

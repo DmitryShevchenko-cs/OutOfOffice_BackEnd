@@ -26,19 +26,19 @@ public class AbsenceReasonRepository : IAbsenceReasonRepository
     public async Task<AbsenceReason> CreateAbsenceReason(AbsenceReason request, CancellationToken cancellationToken = default)
     {
         var entityEntry = await _officeDbContext.AbsenceReasons.AddAsync(request, cancellationToken);
-        await _officeDbContext.AbsenceReasons.SingleAsync(cancellationToken);
+        await _officeDbContext.SaveChangesAsync(cancellationToken);
         return entityEntry.Entity;
     }
 
     public async Task DeleteAbsenceReasonAsync(AbsenceReason request, CancellationToken cancellationToken = default)
     {
         _officeDbContext.AbsenceReasons.Remove(request);
-        await _officeDbContext.AbsenceReasons.SingleAsync(cancellationToken);
+        await _officeDbContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task UpdateAbsenceReasonAsync(AbsenceReason request, CancellationToken cancellationToken = default)
     {
         _officeDbContext.AbsenceReasons.Update(request);
-        await _officeDbContext.AbsenceReasons.SingleAsync(cancellationToken);
+        await _officeDbContext.SaveChangesAsync(cancellationToken);
     }
 }

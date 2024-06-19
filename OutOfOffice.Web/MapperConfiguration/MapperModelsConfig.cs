@@ -108,6 +108,9 @@ public class MapperModelsConfig : AutoMapper.Profile
         CreateMap<SelectionViewModel, Position>()
             .ForMember(m => m.Employees, o => o.Ignore())
             .ReverseMap();
+        CreateMap<SelectionViewModel, AbsenceReason>()
+            .ForMember(m => m.LeaveRequests, o => o.Ignore())
+            .ReverseMap();
         CreateMap<SelectionViewModel, Subdivision>()
             .ForMember(m => m.Employees, o => o.Ignore())
             .ReverseMap();

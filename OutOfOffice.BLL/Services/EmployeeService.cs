@@ -131,4 +131,17 @@ public class EmployeeService : IEmployeeService
         
         return _mapper.Map<List<EmployeeModel>>(employees.OrderBy(r=>r.Status));
     }
+    
+    public async Task<List<EmployeeModel>> GetAllAsync(int managerId, CancellationToken cancellationToken = default)
+    {
+        var creator = await _employeeRepository.GetAll().Where(r => r.Id == managerId && !(r is Employee)).SingleOrDefaultAsync(cancellationToken);
+        if (creator is null)
+            throw new EmployeeNotFoundException($"Manager with Id {managerId} not found");
+
+        var employees = await _employeeRepository.GetAllEmployees()
+            .ToListAsync(cancellationToken);
+        
+        return _mapper.Map<List<EmployeeModel>>(employees.OrderBy(r=>r.Status));
+    }
+    
 }
