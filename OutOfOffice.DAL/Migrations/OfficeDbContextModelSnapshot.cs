@@ -121,9 +121,6 @@ namespace OutOfOffice.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("Photo")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<bool>("isDeactivated")
                         .HasColumnType("bit");
 

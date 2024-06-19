@@ -157,12 +157,10 @@ public class MapperModelsConfig : AutoMapper.Profile
 
         CreateMap<BaseEmployeeModel, CurrentUserViewModel>()
             .ForMember(dest => dest.UserType, opt => opt.Ignore())
-            .ForMember(dest => dest.Photo, opt => opt.MapFrom(src => src.Photo != null ? Convert.ToBase64String(src.Photo) : null))
             .ReverseMap();
 
         CreateMap<BaseEmployeeEntity, CurrentUserViewModel>()
             .ForMember(dest => dest.UserType, opt => opt.Ignore())
-            .ForMember(dest => dest.Photo, opt => opt.MapFrom(src => src.Photo != null ? Convert.ToBase64String(src.Photo) : null))
             .ReverseMap();
 
         CreateMap<BaseEmployeeEntity, ManagerDetailViewModel>()

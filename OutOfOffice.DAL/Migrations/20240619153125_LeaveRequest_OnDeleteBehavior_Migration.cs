@@ -21,7 +21,15 @@ namespace OutOfOffice.DAL.Migrations
             migrationBuilder.DropColumn(
                 name: "isDeactivated",
                 table: "Projects");
-            
+
+            migrationBuilder.DropColumn(
+                name: "ApprovalRequestId",
+                table: "LeaveRequests");
+
+            migrationBuilder.DropColumn(
+                name: "Photo",
+                table: "BaseEmployees");
+
             migrationBuilder.AlterColumn<int>(
                 name: "ProjectManagerId",
                 table: "Projects",
@@ -81,6 +89,12 @@ namespace OutOfOffice.DAL.Migrations
                 type: "int",
                 nullable: false,
                 defaultValue: 0);
+
+            migrationBuilder.AddColumn<byte[]>(
+                name: "Photo",
+                table: "BaseEmployees",
+                type: "varbinary(max)",
+                nullable: true);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_ApprovalRequests_LeaveRequests_LeaveRequestId",

@@ -12,7 +12,7 @@ using OutOfOffice.DAL;
 namespace OutOfOffice.DAL.Migrations
 {
     [DbContext(typeof(OfficeDbContext))]
-    [Migration("20240617231114_LeaveRequest_OnDeleteBehavior_Migration")]
+    [Migration("20240619153125_LeaveRequest_OnDeleteBehavior_Migration")]
     partial class LeaveRequest_OnDeleteBehavior_Migration
     {
         /// <inheritdoc />
@@ -123,9 +123,6 @@ namespace OutOfOffice.DAL.Migrations
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("Photo")
-                        .HasColumnType("varbinary(max)");
 
                     b.Property<bool>("isDeactivated")
                         .HasColumnType("bit");
