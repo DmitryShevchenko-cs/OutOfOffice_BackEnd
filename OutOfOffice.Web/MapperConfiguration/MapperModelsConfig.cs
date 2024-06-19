@@ -135,6 +135,8 @@ public class MapperModelsConfig : AutoMapper.Profile
         
         CreateMap<EmployeeViewModel, EmployeeModel>()
             .ReverseMap();
+        CreateMap<EmployeeFullViewModel, EmployeeModel>()
+            .ReverseMap();
         CreateMap<BaseEmployeeViewModel, EmployeeModel>()
             .ReverseMap();
         CreateMap<EmployeeCreateModel, EmployeeModel>()

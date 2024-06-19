@@ -23,7 +23,12 @@ public class EmployeeService : IEmployeeService
 
     public async Task<EmployeeModel> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var employeeDb = await _employeeRepository.GetByIdAsync(id, cancellationToken);
+        var employeeDb = await _employeeRepository.GetAllEmployees()
+            .Include(e => e.Projects)
+            .ThenInclude(p => p.ProjectManager)
+            .Include(e => e.Projects)
+            .ThenInclude(p => p.ProjectType)
+            .SingleOrDefaultAsync(r => r.Id == id, cancellationToken);
         
         if (employeeDb is null)
             throw new EmployeeNotFoundException($"Employee with Id {id} not found");

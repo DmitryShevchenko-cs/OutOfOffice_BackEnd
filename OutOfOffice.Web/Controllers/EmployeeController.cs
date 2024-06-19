@@ -45,7 +45,7 @@ public class EmployeeController : ControllerBase
     {
         var managerId = User.GetUserId();
         var employees = await _employeeService.GetByIdAsync(employeeId, cancellationToken);
-        return Ok(_mapper.Map<EmployeeViewModel>(employees));
+        return Ok(_mapper.Map<EmployeeFullViewModel>(employees));
     }
     
     [HttpPut("{employeeId:int}")]
