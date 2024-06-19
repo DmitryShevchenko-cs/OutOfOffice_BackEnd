@@ -10,12 +10,12 @@ using OutOfOffice.DAL.Repository.Interfaces;
 
 namespace OutOfOffice.BLL.Services;
 
-public class GeneralEmployeeService : IGeneralEmployeeService
+public class EmployeeService : IEmployeeService
 {
     private readonly IEmployeeRepository _employeeRepository;
     private readonly IMapper _mapper;
 
-    public GeneralEmployeeService(IEmployeeRepository employeeRepository, IMapper mapper)
+    public EmployeeService(IEmployeeRepository employeeRepository, IMapper mapper)
     {
         _employeeRepository = employeeRepository;
         _mapper = mapper;
@@ -23,7 +23,12 @@ public class GeneralEmployeeService : IGeneralEmployeeService
 
     public async Task<EmployeeModel> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var employeeDb = await _employeeRepository.GetByIdAsync(id, cancellationToken);
+        var employeeDb = await _employeeRepository.GetAllEmployees()
+            .Include(e => e.Projects)
+            .ThenInclude(p => p.ProjectManager)
+            .Include(e => e.Projects)
+            .ThenInclude(p => p.ProjectType)
+            .SingleOrDefaultAsync(r => r.Id == id, cancellationToken);
         
         if (employeeDb is null)
             throw new EmployeeNotFoundException($"Employee with Id {id} not found");
@@ -48,19 +53,36 @@ public class GeneralEmployeeService : IGeneralEmployeeService
         employeeModel.Password = PasswordHelper.HashPassword(employeeModel.Password);
         if (creator is HrManager)
             employeeModel.HrMangerId = creator.Id;
-        employeeDb = await _employeeRepository.AddEmployeeAsync(_mapper.Map<DAL.Entity.Employees.Employee>(employeeModel), cancellationToken);
+        employeeDb = await _employeeRepository.AddEmployeeAsync(_mapper.Map<Employee>(employeeModel), cancellationToken);
         return _mapper.Map<EmployeeModel>(await _employeeRepository.GetByIdAsync(employeeDb.Id, cancellationToken));
     }
 
-    public async Task<EmployeeModel> UpdateEmployeeAsync(EmployeeModel employeeModel, CancellationToken cancellationToken = default)
+    public async Task<EmployeeModel> UpdateEmployeeAsync(int managerId, EmployeeModel employeeModel, CancellationToken cancellationToken = default)
     {
-        var employeeDb = await _employeeRepository.GetByIdAsync(employeeModel.Id, cancellationToken);
-        
-        if (employeeDb is null)
-            throw new EmployeeNotFoundException($"Employee with Id {employeeModel.Id} not found");
+        var updater = await _employeeRepository.GetAll().Where(r => r.Id == managerId && (r is HrManager || r is Admin)).SingleOrDefaultAsync(cancellationToken);
+        if (updater is null)
+            throw new EmployeeNotFoundException($"Employee with Id {managerId} not found");
 
-        await _employeeRepository.UpdateEmployeeAsync(_mapper.Map<BaseEmployeeEntity>(employeeModel), cancellationToken);
-        return employeeModel;
+        var employeeDb = await _employeeRepository.GetAllEmployees().SingleOrDefaultAsync(r => r.Id == employeeModel.Id, cancellationToken);
+        foreach (var propertyMap in ReflectionHelper.WidgetUtil<EmployeeModel, Employee>.PropertyMap)
+        {
+            var userProperty = propertyMap.Item1;
+            var userDbProperty = propertyMap.Item2;
+
+            var userSourceValue = userProperty.GetValue(employeeModel);
+            var userTargetValue = userDbProperty.GetValue(employeeDb);
+
+            if (userSourceValue != null && !ReferenceEquals(userSourceValue, "") &&
+                !userSourceValue.Equals(userTargetValue))
+            {
+                userDbProperty.SetValue(employeeDb, userSourceValue);
+            }
+        }
+        employeeDb!.Password = string.IsNullOrEmpty(employeeModel.Password)
+            ? employeeDb.Password
+            : PasswordHelper.HashPassword(employeeModel.Password);
+        var updatedManager = await _employeeRepository.UpdateEmployeeAsync(employeeDb, cancellationToken);
+        return _mapper.Map<EmployeeModel>(updatedManager);
     }
 
     public async Task DeleteEmployeeAsync(int id, CancellationToken cancellationToken = default)
@@ -71,6 +93,15 @@ public class GeneralEmployeeService : IGeneralEmployeeService
             throw new EmployeeNotFoundException($"Employee with Id {id} not found");
 
         await _employeeRepository.DeleteEmployeeAsync(employeeDb, cancellationToken);
+    }
+    
+    public async Task DeactivateEmployeeAsync(int employeeId, CancellationToken cancellationToken = default)
+    {
+        var employeeDb = await _employeeRepository.GetAllEmployees().SingleOrDefaultAsync(r => r.Id == employeeId, cancellationToken);
+        if (employeeDb is null)
+            throw new EmployeeNotFoundException($"Employee with Id {employeeId} not found");
+        employeeDb.Status = false;
+        await _employeeRepository.UpdateEmployeeAsync(employeeDb, cancellationToken);
     }
 
     public async Task<List<EmployeeModel>> GetEmployeesAsync(int managerId, CancellationToken cancellationToken = default)
@@ -98,6 +129,19 @@ public class GeneralEmployeeService : IGeneralEmployeeService
         };
         
         
-        return _mapper.Map<List<EmployeeModel>>(employees);
+        return _mapper.Map<List<EmployeeModel>>(employees.OrderBy(r=>r.Status));
     }
+    
+    public async Task<List<EmployeeModel>> GetAllAsync(int managerId, CancellationToken cancellationToken = default)
+    {
+        var creator = await _employeeRepository.GetAll().Where(r => r.Id == managerId && !(r is Employee)).SingleOrDefaultAsync(cancellationToken);
+        if (creator is null)
+            throw new EmployeeNotFoundException($"Manager with Id {managerId} not found");
+
+        var employees = await _employeeRepository.GetAllEmployees()
+            .ToListAsync(cancellationToken);
+        
+        return _mapper.Map<List<EmployeeModel>>(employees.OrderBy(r=>r.Status));
+    }
+    
 }

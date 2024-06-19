@@ -41,17 +41,8 @@ public class AuthController : ControllerBase
             refreshToken,
             expiredDate,
             cancellationToken);
-
-        var role =  employee switch
-        {
-            HrManager => UserType.HrManager,
-            ProjectManager => UserType.ProjectManager,
-            Employee => UserType.Employee,
-            Admin => UserType.Admin,
-            _ => throw new EmployeeNotFoundException($"User with Id {employee.Id} not found")
-        };
         
-        return Ok(new { accessKey = token, refresh_token = refreshToken, expiredDate = expiredDate, role = role });
+        return Ok(new { accessKey = token, refresh_token = refreshToken, expiredDate = expiredDate, role = employee.GetType().Name });
     }
     
     [AllowAnonymous]

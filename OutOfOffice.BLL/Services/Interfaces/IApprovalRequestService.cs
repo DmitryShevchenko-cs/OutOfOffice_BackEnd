@@ -1,15 +1,17 @@
 using OutOfOffice.BLL.Models;
+using OutOfOffice.BLL.Models.Employees;
+using OutOfOffice.DAL.Entity.Enums;
+
 namespace OutOfOffice.BLL.Services.Interfaces;
 
 public interface IApprovalRequestService : IBasicService<ApprovalRequestModel>
 {
-    Task<List<ApprovalRequestModel>> GetApprovalRequests(int userId, CancellationToken cancellationToken = default);
+    Task<List<ApprovalRequestModel>> GetApprovalRequestsAsync(int userId, CancellationToken cancellationToken = default);
     
-    Task<ApprovalRequestModel> CreateApprovalRequestAsync(int managerId, ApprovalRequestModel approvalRequestModel,
-        CancellationToken cancellationToken);
-
-    Task<ApprovalRequestModel> UpdateApprovalRequestAsync(int managerId, ApprovalRequestModel approvalRequestModel,
+    Task<ApprovalRequestModel> ApproveLeaveRequestAsync(int managerId, int requestId, string comment,
         CancellationToken cancellationToken = default);
-
-    Task DeleteApprovalRequestAsync(int managerId, int approvalRequestId, CancellationToken cancellationToken = default);
+    
+    Task<ApprovalRequestModel> DeclineLeaveRequestAsync(int managerId,  int requestId, string comment,
+        CancellationToken cancellationToken = default);
+    
 }

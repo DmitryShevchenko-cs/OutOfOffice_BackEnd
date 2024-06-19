@@ -12,7 +12,6 @@ public class LeaveRequest : BaseEntity
     public int AbsenceReasonId { get; set; }
     public AbsenceReason AbsenceReason { get; set; } = null!;
     
-    public int ApprovalRequestId { get; set; }
     public ApprovalRequest ApprovalRequest { get; set; }= null!;
     
     public DateTime StartDate { get; set; }

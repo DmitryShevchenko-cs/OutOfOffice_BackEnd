@@ -121,9 +121,6 @@ namespace OutOfOffice.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("Photo")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<bool>("isDeactivated")
                         .HasColumnType("bit");
 
@@ -145,9 +142,6 @@ namespace OutOfOffice.DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AbsenceReasonId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ApprovalRequestId")
                         .HasColumnType("int");
 
                     b.Property<string>("Comment")
@@ -190,7 +184,7 @@ namespace OutOfOffice.DAL.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ProjectManagerId")
+                    b.Property<int?>("ProjectManagerId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProjectTypeId")
@@ -200,9 +194,6 @@ namespace OutOfOffice.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("isDeactivated")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -229,6 +220,18 @@ namespace OutOfOffice.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AbsenceReasons");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ReasonDescription = "Sick"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ReasonDescription = "Vacation"
+                        });
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Selections.Position", b =>
@@ -246,6 +249,38 @@ namespace OutOfOffice.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Positions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Software Engineer"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Frontend Developer"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Backend Developer"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Full Stack Developer"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "QA Engineer"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "UI/UX Designer"
+                        });
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Selections.ProjectType", b =>
@@ -263,6 +298,28 @@ namespace OutOfOffice.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProjectTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Web App"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Data Migration"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Cloud Computing Project"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Blockchain"
+                        });
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Selections.Subdivision", b =>
@@ -280,6 +337,38 @@ namespace OutOfOffice.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Subdivisions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Development"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Operations"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Support"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Security"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "QA"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Data"
+                        });
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.BaseManagerEntity", b =>
@@ -324,6 +413,17 @@ namespace OutOfOffice.DAL.Migrations
                     b.HasBaseType("OutOfOffice.DAL.Entity.Employees.BaseManagerEntity");
 
                     b.HasDiscriminator().HasValue("Admin");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AuthorizationInfoId = 0,
+                            FullName = "ADMIN",
+                            Login = "admin",
+                            Password = "AMnqUjltBJxY6WDypk7qmQ4ftQh1k+IqhlM/FBD7jvhadR3QJVo9EzherHLrK70AQw==",
+                            isDeactivated = false
+                        });
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.HrManager", b =>
@@ -358,7 +458,7 @@ namespace OutOfOffice.DAL.Migrations
             modelBuilder.Entity("OutOfOffice.DAL.Entity.ApprovalRequest", b =>
                 {
                     b.HasOne("OutOfOffice.DAL.Entity.Employees.BaseManagerEntity", "Approver")
-                        .WithMany("ApprovalRequest")
+                        .WithMany("ApprovalRequests")
                         .HasForeignKey("ApproverId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -366,7 +466,7 @@ namespace OutOfOffice.DAL.Migrations
                     b.HasOne("OutOfOffice.DAL.Entity.LeaveRequest", "LeaveRequest")
                         .WithOne("ApprovalRequest")
                         .HasForeignKey("OutOfOffice.DAL.Entity.ApprovalRequest", "LeaveRequestId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Approver");
@@ -409,8 +509,7 @@ namespace OutOfOffice.DAL.Migrations
                     b.HasOne("OutOfOffice.DAL.Entity.Employees.ProjectManager", "ProjectManager")
                         .WithMany("Projects")
                         .HasForeignKey("ProjectManagerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("OutOfOffice.DAL.Entity.Selections.ProjectType", "ProjectType")
                         .WithMany("Projects")
@@ -482,7 +581,7 @@ namespace OutOfOffice.DAL.Migrations
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.BaseManagerEntity", b =>
                 {
-                    b.Navigation("ApprovalRequest");
+                    b.Navigation("ApprovalRequests");
                 });
 
             modelBuilder.Entity("OutOfOffice.DAL.Entity.Employees.Employee", b =>

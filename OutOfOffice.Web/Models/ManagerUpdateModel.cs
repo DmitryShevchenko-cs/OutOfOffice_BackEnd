@@ -7,5 +7,4 @@ public class ManagerUpdateModel
     public string Password { get; set; } = null!;
     
     public string FullName { get; set; } = null!;
-    public byte[]? Photo { get; set; }
 }

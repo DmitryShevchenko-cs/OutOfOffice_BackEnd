@@ -21,9 +21,9 @@ public class EmployeeRepository : IEmployeeRepository
             .Include(r => ((Employee)r).Position)
             .AsQueryable();
     }
-    public IQueryable<BaseManagerEntity> GetAllMangers()
+    public IQueryable<BaseManagerEntity> GetAllManagers()
     {
-        return _officeDbContext.Managers.AsQueryable();
+        return _officeDbContext.Managers.Include(r => r.ApprovalRequests).AsQueryable();
     }
     
     public IQueryable<Employee> GetAllEmployees()
@@ -34,6 +34,20 @@ public class EmployeeRepository : IEmployeeRepository
             .Include(r => r.HrManager)
             .AsQueryable();
     }
+    
+    public IQueryable<HrManager> GetAllHrManagers()
+    {
+        return _officeDbContext.HrManagers
+            .Include(r => r.Partners)
+            .AsQueryable();
+    }
+    
+    public IQueryable<ProjectManager> GetAllProjectManagers()
+    {
+        return _officeDbContext.ProjectManagers
+            .Include(r => r.Projects)
+            .AsQueryable();
+    }
 
     public async Task<BaseEmployeeEntity?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
@@ -42,6 +56,9 @@ public class EmployeeRepository : IEmployeeRepository
             .Include(r => ((Employee)r).Position)
             .Include(r => ((Employee)r).Projects)
             .Include(r => ((Employee)r).LeaveRequests)
+            .Include(r => ((Employee)r).HrManager)
+            .Include(r => ((HrManager)r).Partners)
+            .Include(r => ((ProjectManager)r).Projects).ThenInclude(r => r.ProjectType)
             .SingleOrDefaultAsync(r => r.Id == id, cancellationToken);
     }
 

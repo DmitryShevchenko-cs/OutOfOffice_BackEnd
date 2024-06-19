@@ -9,9 +9,9 @@ public class ApprovalRequestConfiguration : IEntityTypeConfiguration<ApprovalReq
     public void Configure(EntityTypeBuilder<ApprovalRequest> builder)
     {
         
-        builder.HasOne(i => i.LeaveRequest)
-            .WithOne(i => i.ApprovalRequest)
-            .HasForeignKey<ApprovalRequest>(a => a.LeaveRequestId);
+        builder.HasOne(ar => ar.LeaveRequest)
+            .WithOne(lr => lr.ApprovalRequest)
+            .HasForeignKey<ApprovalRequest>(ar => ar.LeaveRequestId);
 
         builder.HasOne(i => i.Approver)
             .WithMany()

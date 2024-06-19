@@ -30,7 +30,13 @@ public class MapperModelsConfig : AutoMapper.Profile
         CreateMap<HrManager, HrManagerModel>()
             .ReverseMap();
         
+        CreateMap<HrManagerViewModel, HrManagerModel>()
+            .ReverseMap();
+        
         CreateMap<ProjectManager, ProjectManagerModel>()
+            .ReverseMap();
+        
+        CreateMap<ProjectManagerViewModel, ProjectManagerModel>()
             .ReverseMap();
         
         CreateMap<AuthorizationInfoModel, AuthorizationInfo>()
@@ -88,6 +94,7 @@ public class MapperModelsConfig : AutoMapper.Profile
         CreateMap<BaseManagerModel, ManagerUpdateModel>()
             .ReverseMap();
         CreateMap<BaseManagerModel, ManagerViewModel>()
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.GetType().Name))
             .ReverseMap();
         CreateMap<BaseManagerEntity, ManagerViewModel>()
             .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.GetType().Name))
@@ -100,6 +107,9 @@ public class MapperModelsConfig : AutoMapper.Profile
         
         CreateMap<SelectionViewModel, Position>()
             .ForMember(m => m.Employees, o => o.Ignore())
+            .ReverseMap();
+        CreateMap<SelectionViewModel, AbsenceReason>()
+            .ForMember(m => m.LeaveRequests, o => o.Ignore())
             .ReverseMap();
         CreateMap<SelectionViewModel, Subdivision>()
             .ForMember(m => m.Employees, o => o.Ignore())
@@ -128,11 +138,19 @@ public class MapperModelsConfig : AutoMapper.Profile
         
         CreateMap<EmployeeViewModel, EmployeeModel>()
             .ReverseMap();
+        CreateMap<EmployeeViewModel, Employee>()
+            .ReverseMap();
+        CreateMap<EmployeeFullViewModel, EmployeeModel>()
+            .ReverseMap();
         CreateMap<BaseEmployeeViewModel, EmployeeModel>()
             .ReverseMap();
         CreateMap<EmployeeCreateModel, EmployeeModel>()
             .ReverseMap();
+        CreateMap<EmployeeUpdateModel, EmployeeModel>()
+            .ReverseMap();
         
+        CreateMap<ProjectViewModel, Project>()
+            .ReverseMap();
         CreateMap<ProjectViewModel, ProjectModel>()
             .ReverseMap();
         CreateMap<ProjectCreateModel, ProjectModel>()
@@ -142,14 +160,21 @@ public class MapperModelsConfig : AutoMapper.Profile
 
         CreateMap<BaseEmployeeModel, CurrentUserViewModel>()
             .ForMember(dest => dest.UserType, opt => opt.Ignore())
-            .ForMember(dest => dest.Photo, opt => opt.MapFrom(src => src.Photo != null ? Convert.ToBase64String(src.Photo) : null))
             .ReverseMap();
 
         CreateMap<BaseEmployeeEntity, CurrentUserViewModel>()
             .ForMember(dest => dest.UserType, opt => opt.Ignore())
-            .ForMember(dest => dest.Photo, opt => opt.MapFrom(src => src.Photo != null ? Convert.ToBase64String(src.Photo) : null))
             .ReverseMap();
 
-
+        CreateMap<BaseEmployeeEntity, ManagerDetailViewModel>()
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.GetType().Name))
+            .ReverseMap();
+        
+        CreateMap<HrManager, ManagerDetailViewModel>()
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.GetType().Name))
+            .ReverseMap();
+        CreateMap<ProjectManager, ManagerDetailViewModel>()
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.GetType().Name))
+            .ReverseMap();
     }
 }

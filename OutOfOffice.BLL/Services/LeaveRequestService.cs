@@ -6,6 +6,7 @@ using OutOfOffice.BLL.Models;
 using OutOfOffice.BLL.Services.Interfaces;
 using OutOfOffice.DAL.Entity;
 using OutOfOffice.DAL.Entity.Employees;
+using OutOfOffice.DAL.Entity.Enums;
 using OutOfOffice.DAL.Repository.Interfaces;
 
 namespace OutOfOffice.BLL.Services;
@@ -22,6 +23,7 @@ public class LeaveRequestService : ILeaveRequestService
         _leaveRequestRepository = leaveRequestRepository;
         _mapper = mapper;
         _employeeRepository = employeeRepository;
+
     }
 
     public async Task<LeaveRequestModel> GetByIdAsync(int id, CancellationToken cancellationToken = default)
@@ -44,14 +46,21 @@ public class LeaveRequestService : ILeaveRequestService
         {
             throw new EmployeeNotFoundException($"Employee with Id {employeeId} not found");
         }
-
-        leaveRequestModel.EmployeeId = employeeId;
-        leaveRequestModel.ApprovalRequest = new ApprovalRequestModel
-        {
-            ApproverId = approverId,
-            Comment = ""
-        };
-        var requestDb = await _leaveRequestRepository.CreateLeaveRequestAsync(_mapper.Map<LeaveRequest>(leaveRequestModel),
+        
+        var requestDb = await _leaveRequestRepository.CreateLeaveRequestAsync(new LeaveRequest
+            {
+                EmployeeId = employeeId,
+                AbsenceReasonId = leaveRequestModel.AbsenceReasonId,
+                ApprovalRequest = new ApprovalRequest
+                {
+                    ApproverId = approverId,
+                    Comment = ""
+                },
+                StartDate = leaveRequestModel.StartDate,
+                EndDate = leaveRequestModel.EndDate,
+                Status = LeaveRequestStatus.Submitted,
+                Comment = leaveRequestModel.Comment
+            },
                 cancellationToken);
         return _mapper.Map<LeaveRequestModel>(requestDb);
     }
@@ -96,35 +105,28 @@ public class LeaveRequestService : ILeaveRequestService
     public async Task DeleteLeaveRequestAsync(int employeeId, int leaveRequestId, CancellationToken cancellationToken = default)
     {
         var employeeDb = await _employeeRepository.GetAll()
-            .FirstOrDefaultAsync(r => r.Id == employeeId && r is Employee, cancellationToken);
-        if (employeeDb is not Employee)
+            .FirstOrDefaultAsync(r => r.Id == employeeId && (r is Employee || r is Admin), cancellationToken);
+        if (employeeDb is not (Employee or Admin))
         {
             throw new EmployeeNotFoundException($"Employee with Id {employeeId} not found");
         }
+
+        LeaveRequest? leaveRequestDb;
+        if(employeeDb is Employee)
+            leaveRequestDb = await _leaveRequestRepository.GetAll().Include(r => r.Employee).SingleOrDefaultAsync(r => r.EmployeeId == employeeId && r.Id == leaveRequestId, cancellationToken);
+        else
+            leaveRequestDb = await _leaveRequestRepository.GetAll().Include(r => r.Employee).SingleOrDefaultAsync(r =>  r.Id == leaveRequestId, cancellationToken);
         
-        var leaveRequestDb = await _leaveRequestRepository.GetAll().Include(r => r.Employee)
-            .SingleOrDefaultAsync(r => r.EmployeeId == employeeId && r.Id == leaveRequestId, cancellationToken);
         if (leaveRequestDb is null)
             throw new LeaveRequestNotFoundException($"Leave request with Id {leaveRequestId} not found");
         
         await _leaveRequestRepository.DeleteLeaveRequestAsync(leaveRequestDb, cancellationToken);
     }
-
-    public async Task<List<LeaveRequestModel>> GetAllEmployeesRequestAsync(int userId, CancellationToken cancellationToken = default)
-    {
-        var leaveRequestsDb = await _leaveRequestRepository.GetAll().Include(r => r.Employee).Include(r => r.ApprovalRequest).ThenInclude(i => i!.Approver)
-            .Where(r => r.EmployeeId == userId).ToListAsync(cancellationToken);
-        
-        return _mapper.Map<List<LeaveRequestModel>>(leaveRequestsDb);
-    }
-
-    /// <summary>
-    /// user can get his leaveRequest by id
-    /// </summary>
+    
     public async Task<LeaveRequestModel> GetByRequestIdAsync(int employeeId, int requestId, CancellationToken cancellationToken = default)
     {
         var leaveRequestsDb = await _leaveRequestRepository.GetAll().Include(r => r.Employee)
-            .SingleOrDefaultAsync(r => r.EmployeeId == employeeId && r.Id == requestId, cancellationToken);
+            .SingleOrDefaultAsync(r => r.Id == requestId, cancellationToken);
         
         return _mapper.Map<LeaveRequestModel>(leaveRequestsDb);
     }

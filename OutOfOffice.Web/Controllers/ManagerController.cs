@@ -67,5 +67,37 @@ public class ManagerController : ControllerBase
         var managers = await _managerService.GetAll(userId, cancellationToken);
         return Ok(_mapper.Map<List<ManagerViewModel>>(managers));
     }
+    
+    [HttpGet("hr-managers")]
+    public async Task<IActionResult> GetHrManagers(CancellationToken cancellationToken = default)
+    {
+        var userId = User.GetUserId();
+        var managers = await _managerService.GetHrManagers(userId, cancellationToken);
+        return Ok(_mapper.Map<List<HrManagerViewModel>>(managers));
+    }
+    
+    [HttpGet("project-managers")]
+    public async Task<IActionResult> GetProjectManagers(CancellationToken cancellationToken = default)
+    {
+        var userId = User.GetUserId();
+        var managers = await _managerService.GetProjectManagers(userId, cancellationToken);
+        return Ok(_mapper.Map<List<ProjectManagerViewModel>>(managers));
+    }
+    
+    [HttpGet("approvers")]
+    public async Task<IActionResult> GetApprovers(CancellationToken cancellationToken = default)
+    {
+        var userId = User.GetUserId();
+        var approvedRequest = await _managerService.GetApproversAsync(userId, cancellationToken);
+        return Ok(_mapper.Map<List<ManagerViewModel>>(approvedRequest));
+    }
+
+    [HttpGet("{managerId:int}")]
+    public async Task<IActionResult> GetById(int managerId, CancellationToken cancellationToken = default)
+    {
+        var userId = User.GetUserId();
+        var manager = await _managerService.GetByIdAsync(managerId, cancellationToken);
+        return Ok(_mapper.Map<ManagerDetailViewModel>(manager));
+    }
 
 }

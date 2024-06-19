@@ -12,6 +12,9 @@ public interface IEmployeeRepository : IBasicRepository<BaseEmployeeEntity>
         CancellationToken cancellationToken = default);
 
     IQueryable<Employee> GetAllEmployees();
-    IQueryable<BaseManagerEntity> GetAllMangers();
+    IQueryable<BaseManagerEntity> GetAllManagers();
+
+    IQueryable<HrManager> GetAllHrManagers();
+    IQueryable<ProjectManager> GetAllProjectManagers();
 
 }

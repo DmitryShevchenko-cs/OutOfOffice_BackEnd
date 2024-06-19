@@ -69,5 +69,13 @@ public class ProjectController : ControllerBase
         var projects = await _projectService.GetAllAsync(userId, cancellationToken);
         return Ok(_mapper.Map<List<ProjectViewModel>>(projects));
     }
+    
+    [HttpGet("{projectId:int}")]
+    public async Task<IActionResult> GetById(int projectId, CancellationToken cancellationToken)
+    {
+        var userId = User.GetUserId();
+        var projects = await _projectService.GetByIdAsync(projectId, cancellationToken);
+        return Ok(_mapper.Map<ProjectViewModel>(projects));
+    }
 
 }

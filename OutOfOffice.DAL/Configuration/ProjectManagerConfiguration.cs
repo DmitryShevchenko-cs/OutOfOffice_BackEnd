@@ -11,6 +11,6 @@ public class ProjectManagerConfiguration : IEntityTypeConfiguration<ProjectManag
         builder.HasMany(i => i.Projects)
             .WithOne(i => i.ProjectManager)
             .HasForeignKey(i => i.ProjectManagerId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }
