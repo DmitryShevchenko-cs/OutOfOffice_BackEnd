@@ -176,16 +176,16 @@ public class ProjectService : IProjectService
     public async Task AddEmployeesInProjectAsync(int projectManagerId, int projectId,
         ICollection<int> employeeModelsIds, CancellationToken cancellationToken = default)
     {
-        // get employee who is not a general employee
-        var manager = await _employeeRepository.GetAll()
+        // get managers
+        var manager = await _employeeRepository.GetAllManagers()
             .SingleOrDefaultAsync(r => r.Id == projectManagerId && (r is ProjectManager || r is Admin),
                 cancellationToken);
         if (manager is null)
             throw new EmployeeNotFoundException($"Manger or Admin with Id {projectManagerId} not found");
 
-        //get all employees which are GeneralEmployee
-        var employees = await _employeeRepository.GetAll().Include(r => ((Employee)r).Projects)
-            .Where(r => employeeModelsIds.Contains(r.Id) && r is Employee).ToListAsync(cancellationToken);
+        //get all employees 
+        var employees = await _employeeRepository.GetAllEmployees().Include(r => r.Projects)
+            .Where(r => employeeModelsIds.Contains(r.Id)).ToListAsync(cancellationToken);
 
         if (employees.Any())
         {
@@ -193,12 +193,9 @@ public class ProjectService : IProjectService
             if (projectDb is null)
                 throw new ProjectNotFoundException($"Project with Id {projectId} not found");
 
-            foreach (var emp in employees.Cast<Employee>().Where(emp => !emp.Projects.Contains(projectDb)))
-            {
-                emp.Projects.Add(projectDb);
-            }
+            projectDb.Employees = employees;
 
-            await _employeeRepository.UpdateEmployeeAsync(employees, cancellationToken);
+            await _projectRepository.UpdateProjectAsync(projectDb, cancellationToken);
         }
         else
         {

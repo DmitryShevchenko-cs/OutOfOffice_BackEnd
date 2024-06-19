@@ -73,7 +73,7 @@ public class ManagerService : IManagerService
     {
         var updater = await _employeeRepository.GetAll().Where(r => r.Id == managerId && (r is BaseManagerEntity || r is Admin)).SingleOrDefaultAsync(cancellationToken);
         if (updater is null)
-            throw new EmployeeNotFoundException($"Employee with Id {managerModel.Id} not found");
+            throw new EmployeeNotFoundException($"Employee with Id {managerId} not found");
 
         if (updater is Admin || (updater is BaseManagerEntity && updater.Id == managerModel.Id))
         {
@@ -124,6 +124,26 @@ public class ManagerService : IManagerService
         
         var managersDb = await _employeeRepository.GetAllManagers().ToListAsync(cancellationToken);
         return _mapper.Map<List<BaseManagerEntity>>(managersDb);
+    }
+
+    public async Task<List<HrManagerModel>> GetHrManagers(int adminId, CancellationToken cancellationToken = default)
+    {
+        var adminDb = await _employeeRepository.GetByIdAsync(adminId, cancellationToken);
+        if (adminDb is not Admin)
+            throw new ManagerException("Invalid manager type");
+        
+        var managersDb = await _employeeRepository.GetAllHrManagers().ToListAsync(cancellationToken);
+        return _mapper.Map<List<HrManagerModel>>(managersDb);
+    }
+
+    public async Task<List<ProjectManagerModel>> GetProjectManagers(int adminId, CancellationToken cancellationToken = default)
+    {
+        var adminDb = await _employeeRepository.GetByIdAsync(adminId, cancellationToken);
+        if (adminDb is not Admin)
+            throw new ManagerException("Invalid manager type");
+        
+        var managersDb = await _employeeRepository.GetAllProjectManagers().ToListAsync(cancellationToken);
+        return _mapper.Map<List<ProjectManagerModel>>(managersDb);
     }
 
     public async Task<List<BaseManagerEntity>> GetApproversAsync(int userId, CancellationToken cancellationToken = default)

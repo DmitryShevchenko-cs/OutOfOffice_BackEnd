@@ -14,4 +14,7 @@ public interface IEmployeeRepository : IBasicRepository<BaseEmployeeEntity>
     IQueryable<Employee> GetAllEmployees();
     IQueryable<BaseManagerEntity> GetAllManagers();
 
+    IQueryable<HrManager> GetAllHrManagers();
+    IQueryable<ProjectManager> GetAllProjectManagers();
+
 }

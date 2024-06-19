@@ -10,6 +10,8 @@ public interface IManagerService : IBasicService<BaseManagerModel>
     Task<BaseManagerModel> UpdateManagerAsync(int managerId, BaseManagerModel managerModel, CancellationToken cancellationToken = default);
     Task DeleteManagerAsync(int adminId, int managerId, CancellationToken cancellationToken = default);
     Task<List<BaseManagerEntity>> GetAll(int adminId, CancellationToken cancellationToken = default);
+    Task<List<HrManagerModel>> GetHrManagers(int adminId, CancellationToken cancellationToken = default);
+    Task<List<ProjectManagerModel>> GetProjectManagers(int adminId, CancellationToken cancellationToken = default);
     
     Task<List<BaseManagerEntity>> GetApproversAsync(int userId, CancellationToken cancellationToken = default);
 }

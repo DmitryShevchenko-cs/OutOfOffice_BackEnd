@@ -68,6 +68,22 @@ public class ManagerController : ControllerBase
         return Ok(_mapper.Map<List<ManagerViewModel>>(managers));
     }
     
+    [HttpGet("hr-managers")]
+    public async Task<IActionResult> GetHrManagers(CancellationToken cancellationToken = default)
+    {
+        var userId = User.GetUserId();
+        var managers = await _managerService.GetHrManagers(userId, cancellationToken);
+        return Ok(_mapper.Map<List<HrManagerViewModel>>(managers));
+    }
+    
+    [HttpGet("project-managers")]
+    public async Task<IActionResult> GetProjectManagers(CancellationToken cancellationToken = default)
+    {
+        var userId = User.GetUserId();
+        var managers = await _managerService.GetProjectManagers(userId, cancellationToken);
+        return Ok(_mapper.Map<List<ProjectManagerViewModel>>(managers));
+    }
+    
     [HttpGet("approvers")]
     public async Task<IActionResult> GetApprovers(CancellationToken cancellationToken = default)
     {

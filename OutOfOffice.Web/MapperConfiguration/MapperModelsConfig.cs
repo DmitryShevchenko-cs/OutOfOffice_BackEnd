@@ -30,7 +30,13 @@ public class MapperModelsConfig : AutoMapper.Profile
         CreateMap<HrManager, HrManagerModel>()
             .ReverseMap();
         
+        CreateMap<HrManagerViewModel, HrManagerModel>()
+            .ReverseMap();
+        
         CreateMap<ProjectManager, ProjectManagerModel>()
+            .ReverseMap();
+        
+        CreateMap<ProjectManagerViewModel, ProjectManagerModel>()
             .ReverseMap();
         
         CreateMap<AuthorizationInfoModel, AuthorizationInfo>()
@@ -132,6 +138,8 @@ public class MapperModelsConfig : AutoMapper.Profile
         CreateMap<BaseEmployeeViewModel, EmployeeModel>()
             .ReverseMap();
         CreateMap<EmployeeCreateModel, EmployeeModel>()
+            .ReverseMap();
+        CreateMap<EmployeeUpdateModel, EmployeeModel>()
             .ReverseMap();
         
         CreateMap<ProjectViewModel, ProjectModel>()
