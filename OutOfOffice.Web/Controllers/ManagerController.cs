@@ -96,8 +96,8 @@ public class ManagerController : ControllerBase
     public async Task<IActionResult> GetById(int managerId, CancellationToken cancellationToken = default)
     {
         var userId = User.GetUserId();
-        var approvedRequest = await _managerService.GetByIdAsync(managerId, cancellationToken);
-        return Ok(_mapper.Map<ManagerViewModel>(approvedRequest));
+        var manager = await _managerService.GetByIdAsync(managerId, cancellationToken);
+        return Ok(_mapper.Map<ManagerDetailViewModel>(manager));
     }
 
 }

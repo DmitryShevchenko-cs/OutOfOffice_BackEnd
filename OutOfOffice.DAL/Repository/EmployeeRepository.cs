@@ -57,6 +57,8 @@ public class EmployeeRepository : IEmployeeRepository
             .Include(r => ((Employee)r).Projects)
             .Include(r => ((Employee)r).LeaveRequests)
             .Include(r => ((Employee)r).HrManager)
+            .Include(r => ((HrManager)r).Partners)
+            .Include(r => ((ProjectManager)r).Projects).ThenInclude(r => r.ProjectType)
             .SingleOrDefaultAsync(r => r.Id == id, cancellationToken);
     }
 

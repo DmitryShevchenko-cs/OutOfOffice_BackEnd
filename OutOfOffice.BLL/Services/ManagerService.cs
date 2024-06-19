@@ -21,7 +21,7 @@ public class ManagerService : IManagerService
         _employeeRepository = employeeRepository;
     }
 
-    public async Task<BaseManagerModel> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<BaseEmployeeEntity> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         var managerDb = await _employeeRepository.GetByIdAsync(id, cancellationToken);
         
@@ -29,7 +29,7 @@ public class ManagerService : IManagerService
             throw new EmployeeNotFoundException($"Employee with Id {id} not found");
         
         var managerModel = _mapper.Map<BaseManagerModel>(managerDb);
-        return managerModel;
+        return managerDb;
     }
 
     public async Task<BaseManagerModel> CreateProjectManagerAsync(int adminId, BaseManagerModel managerModel, CancellationToken cancellationToken = default)
