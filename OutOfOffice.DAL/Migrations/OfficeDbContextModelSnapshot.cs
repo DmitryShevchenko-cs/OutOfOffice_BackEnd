@@ -382,7 +382,8 @@ namespace OutOfOffice.DAL.Migrations
                 {
                     b.HasBaseType("OutOfOffice.DAL.Entity.Employees.BaseEmployeeEntity");
 
-                    b.Property<int?>("HrMangerId")
+                    b.Property<int?>("HrManagerId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("OutOfOfficeBalance")
@@ -399,7 +400,7 @@ namespace OutOfOffice.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.HasIndex("HrMangerId");
+                    b.HasIndex("HrManagerId");
 
                     b.HasIndex("PositionId");
 
@@ -526,8 +527,9 @@ namespace OutOfOffice.DAL.Migrations
                 {
                     b.HasOne("OutOfOffice.DAL.Entity.Employees.HrManager", "HrManager")
                         .WithMany("Partners")
-                        .HasForeignKey("HrMangerId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("HrManagerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("OutOfOffice.DAL.Entity.Selections.Position", "Position")
                         .WithMany("Employees")

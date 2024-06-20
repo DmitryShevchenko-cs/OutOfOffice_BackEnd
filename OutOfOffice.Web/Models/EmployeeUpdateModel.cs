@@ -16,5 +16,5 @@ public class EmployeeUpdateModel
     public bool Status { get; set; }
     
     public int OutOfOfficeBalance { get; set; }
-    public int? HrMangerId { get; set; }
+    public int HrManagerId { get; set; }
 }

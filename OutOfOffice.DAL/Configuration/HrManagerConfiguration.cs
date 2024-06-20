@@ -10,7 +10,7 @@ public class HrManagerConfiguration : IEntityTypeConfiguration<HrManager>
     {
         builder.HasMany(i => i.Partners)
             .WithOne(i => i.HrManager)
-            .HasForeignKey(i => i.HrMangerId)
+            .HasForeignKey(i => i.HrManagerId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

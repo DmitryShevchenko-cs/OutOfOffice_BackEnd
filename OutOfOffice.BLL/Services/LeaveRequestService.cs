@@ -145,7 +145,7 @@ public class LeaveRequestService : ILeaveRequestService
         var leaveRequestsDb = userDb switch
         {
             HrManager => await _leaveRequestRepository.GetAll()
-                .Where(r => r.Employee.HrMangerId == employeeId)
+                .Where(r => r.Employee.HrManagerId == employeeId)
                 .Include(r => r.Employee)
                 .ToListAsync(cancellationToken),
             

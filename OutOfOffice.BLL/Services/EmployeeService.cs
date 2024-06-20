@@ -52,7 +52,7 @@ public class EmployeeService : IEmployeeService
         
         employeeModel.Password = PasswordHelper.HashPassword(employeeModel.Password);
         if (creator is HrManager)
-            employeeModel.HrMangerId = creator.Id;
+            employeeModel.HrManagerId = creator.Id;
         employeeDb = await _employeeRepository.AddEmployeeAsync(_mapper.Map<Employee>(employeeModel), cancellationToken);
         return _mapper.Map<EmployeeModel>(await _employeeRepository.GetByIdAsync(employeeDb.Id, cancellationToken));
     }
@@ -113,7 +113,7 @@ public class EmployeeService : IEmployeeService
         var employees = creator switch
         {
             HrManager => await _employeeRepository.GetAllEmployees()
-                .Where(r => r.HrMangerId == managerId)
+                .Where(r => r.HrManagerId == managerId)
                 .ToListAsync(cancellationToken),
             
             ProjectManager => await _employeeRepository.GetAllEmployees()

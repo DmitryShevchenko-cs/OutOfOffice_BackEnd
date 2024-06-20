@@ -12,6 +12,20 @@ namespace OutOfOffice.DAL.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_BaseEmployees_BaseEmployees_HrMangerId",
+                table: "BaseEmployees");
+
+            migrationBuilder.RenameColumn(
+                name: "HrMangerId",
+                table: "BaseEmployees",
+                newName: "HrManagerId");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_BaseEmployees_HrMangerId",
+                table: "BaseEmployees",
+                newName: "IX_BaseEmployees_HrManagerId");
+
             migrationBuilder.InsertData(
                 table: "AbsenceReasons",
                 columns: new[] { "Id", "ReasonDescription" },
@@ -62,11 +76,23 @@ namespace OutOfOffice.DAL.Migrations
                     { 5, "QA" },
                     { 6, "Data" }
                 });
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_BaseEmployees_BaseEmployees_HrManagerId",
+                table: "BaseEmployees",
+                column: "HrManagerId",
+                principalTable: "BaseEmployees",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_BaseEmployees_BaseEmployees_HrManagerId",
+                table: "BaseEmployees");
+
             migrationBuilder.DeleteData(
                 table: "AbsenceReasons",
                 keyColumn: "Id",
@@ -161,6 +187,24 @@ namespace OutOfOffice.DAL.Migrations
                 table: "Subdivisions",
                 keyColumn: "Id",
                 keyValue: 6);
+
+            migrationBuilder.RenameColumn(
+                name: "HrManagerId",
+                table: "BaseEmployees",
+                newName: "HrMangerId");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_BaseEmployees_HrManagerId",
+                table: "BaseEmployees",
+                newName: "IX_BaseEmployees_HrMangerId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_BaseEmployees_BaseEmployees_HrMangerId",
+                table: "BaseEmployees",
+                column: "HrMangerId",
+                principalTable: "BaseEmployees",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
         }
     }
 }

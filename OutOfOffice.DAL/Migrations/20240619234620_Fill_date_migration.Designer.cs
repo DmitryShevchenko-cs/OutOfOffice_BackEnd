@@ -12,7 +12,7 @@ using OutOfOffice.DAL;
 namespace OutOfOffice.DAL.Migrations
 {
     [DbContext(typeof(OfficeDbContext))]
-    [Migration("20240619220549_Fill_date_migration")]
+    [Migration("20240619234620_Fill_date_migration")]
     partial class Fill_date_migration
     {
         /// <inheritdoc />
@@ -385,7 +385,8 @@ namespace OutOfOffice.DAL.Migrations
                 {
                     b.HasBaseType("OutOfOffice.DAL.Entity.Employees.BaseEmployeeEntity");
 
-                    b.Property<int?>("HrMangerId")
+                    b.Property<int?>("HrManagerId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("OutOfOfficeBalance")
@@ -402,7 +403,7 @@ namespace OutOfOffice.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.HasIndex("HrMangerId");
+                    b.HasIndex("HrManagerId");
 
                     b.HasIndex("PositionId");
 
@@ -529,8 +530,9 @@ namespace OutOfOffice.DAL.Migrations
                 {
                     b.HasOne("OutOfOffice.DAL.Entity.Employees.HrManager", "HrManager")
                         .WithMany("Partners")
-                        .HasForeignKey("HrMangerId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("HrManagerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("OutOfOffice.DAL.Entity.Selections.Position", "Position")
                         .WithMany("Employees")

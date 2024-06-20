@@ -147,7 +147,7 @@ public class ProjectService : IProjectService
             HrManager => await _projectRepository.GetAll()
                 .Include(r => r.ProjectType)
                 .Include(r => r.ProjectManager)
-                .Where(r => r.Employees.Any(i => i.HrMangerId == userId))
+                .Where(r => r.Employees.Any(i => i.HrManagerId == userId))
                 .ToListAsync(cancellationToken),
 
             ProjectManager => await _projectRepository.GetAll()

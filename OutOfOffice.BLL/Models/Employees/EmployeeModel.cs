@@ -13,8 +13,8 @@ public class EmployeeModel : BaseEmployeeModel
     public bool Status { get; set; }
     public int OutOfOfficeBalance { get; set; }
 
-    public int? HrMangerId { get; set; }
-    public HrManagerModel HrManager { get; set; } = null!;
+    public int? HrManagerId { get; set; }
+    public HrManagerModel? HrManager { get; set; }
     
     public ICollection<LeaveRequestModel> LeaveRequests { get; set; } = null!;
     public ICollection<ProjectModel> Projects { get; set; } = null!;
